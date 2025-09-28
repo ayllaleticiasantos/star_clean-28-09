@@ -65,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         header("Location: ../prestador/dashboard.php");
                         break;
                     case 'cliente':
-                        // Redireciona para a página inicial ou um dashboard de cliente, se existir
-                        header("Location: ../index.php");
+                        // ALTERAÇÃO AQUI: Redireciona para o dashboard do cliente
+                        header("Location: ../cliente/dashboard.php");
                         break;
                 }
                 exit();
