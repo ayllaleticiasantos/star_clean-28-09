@@ -1,0 +1,9 @@
+<?php
+define("DB_HOST", "127.0.0.1");
+define("DB_NAME", "bd_star_clean");
+define("DB_USER", "root");
+define("DB_PASS", "");
+define("DB_CHARSET", "utf8mb4");
+
+// ADICIONE ESTA LINHA ABAIXO
+define("BASE_URL", "http://localhost/star_clean"); // IMPORTANTE: Altere se a sua pasta tiver um nome diferente
