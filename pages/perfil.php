@@ -129,15 +129,15 @@ include '../includes/navbar_logged_in.php';
             <form action="perfil.php" method="POST">
                 <div class="mb-3">
                     <label for="senha_atual" class="form-label">Senha Atual</label>
-                    <input type="password" class="form-control" id="senha_atual" name="senha_atual" required>
+                    <input type="password" class="form-control" id="senha_atual" placeholder="Digite sua senha atual" name="senha_atual" required>
                 </div>
                 <div class="mb-3">
                     <label for="nova_senha" class="form-label">Nova Senha</label>
-                    <input type="password" class="form-control" id="nova_senha" name="nova_senha" required>
+                    <input type="password" class="form-control" id="nova_senha" placeholder="Digite sua nova senha" name="nova_senha" required>
                 </div>
                 <div class="mb-3">
                     <label for="confirmar_nova_senha" class="form-label">Confirmar Nova Senha</label>
-                    <input type="password" class="form-control" id="confirmar_nova_senha" name="confirmar_nova_senha" required>
+                    <input type="password" class="form-control" id="confirmar_nova_senha" placeholder="Confirme sua nova senha" name="confirmar_nova_senha" required>
                 </div>
                 <button type="submit" name="alterar_senha" class="btn btn-primary">Alterar Senha</button>
             </form>

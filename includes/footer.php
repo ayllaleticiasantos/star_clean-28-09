@@ -2,7 +2,7 @@
     </div> <!-- Fecha row -->
 </div> <!-- Fecha container-fluid -->
 
-<footer class="text-center bg-light py-3 border-top mt-5">
+<footer class="text-center bg-light py-3 sticky-bottom mt-5">
     <p>&copy; <?= date('Y') ?> StarClean. Todos os direitos reservados.</p>
 </footer>
 
