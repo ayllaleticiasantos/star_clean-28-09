@@ -70,7 +70,7 @@ include '../includes/navbar.php';
         <form action="esqueci-senha.php" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail:</label>
-                <input type="email" class="form-control" name="email" id="email" required>
+                <input type="email" class="form-control" name="email" placeholder="Digite seu e-mail" id="email" required>
             </div>
             <button type="submit" class="btn btn-primary w-100">Enviar Link de Recuperação</button>
         </form>

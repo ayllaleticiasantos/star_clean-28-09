@@ -9,9 +9,11 @@ require_once __DIR__ . '/../config/config.php';
     <title>StarClean - Sistema de Limpeza</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
 </head>
-<body style="background-color: #f0f2f5;">
+<body style="background-color: #c6daf8ff;">

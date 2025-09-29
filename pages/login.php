@@ -96,12 +96,12 @@ include '../includes/navbar.php';
         <form action="login.php" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail:</label>
-                <input type="email" class="form-control" name="email" id="email" required>
+                <input type="email" class="form-control" name="email" placeholder="Digite seu e-mail" id="email" required>
             </div>
 
             <div class="mb-3">
                 <label for="senha" class="form-label">Senha:</label>
-                <input type="password" class="form-control" name="senha" id="senha" required>
+                <input type="password" class="form-control" name="senha" placeholder="Digite sua senha" id="senha" required>
             </div>
 
             <div class="mb-3">

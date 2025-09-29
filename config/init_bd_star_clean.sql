@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS bd_star_clean CHARACTER SET utf8mb4 COLLATE utf8mb
 USE bd_star_clean;
 
 -- CLIENTES
-CREATE TABLE clientes (
+CREATE TABLE IF NOT EXISTS clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100),
     email VARCHAR(100) UNIQUE,
@@ -11,7 +11,7 @@ CREATE TABLE clientes (
 );
 
 -- PRESTADORES
-CREATE TABLE prestadores (
+CREATE TABLE IF NOT EXISTS prestadores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100),
     email VARCHAR(100) UNIQUE,
@@ -21,7 +21,7 @@ CREATE TABLE prestadores (
 );
 
 -- SERVIÇOS
-CREATE TABLE servicos (
+CREATE TABLE IF NOT EXISTS servicos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     prestador_id INT,
     titulo VARCHAR(100),
@@ -31,7 +31,7 @@ CREATE TABLE servicos (
 );
 
 -- DISPONIBILIDADE
-CREATE TABLE disponibilidade (
+CREATE TABLE IF NOT EXISTS disponibilidade (
     id INT AUTO_INCREMENT PRIMARY KEY,
     prestador_id INT,
     data DATE,
@@ -41,7 +41,7 @@ CREATE TABLE disponibilidade (
 );
 
 -- AGENDAMENTOS
-CREATE TABLE agendamentos (
+CREATE TABLE IF NOT EXISTS agendamentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cliente_id INT,
     servico_id INT,
@@ -53,7 +53,7 @@ CREATE TABLE agendamentos (
 );
 
 -- AVALIAÇÕES
-CREATE TABLE avaliacoes (
+CREATE TABLE IF NOT EXISTS avaliacoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     agendamento_id INT,
     nota INT,
@@ -62,7 +62,7 @@ CREATE TABLE avaliacoes (
 );
 
 -- ADMINISTRADORES
-CREATE TABLE administradores (
+CREATE TABLE IF NOT EXISTS administradores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100),
     email VARCHAR(100) UNIQUE,

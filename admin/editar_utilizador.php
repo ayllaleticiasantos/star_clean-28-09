@@ -74,12 +74,12 @@ include '../includes/sidebar.php';
 
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome:</label>
-                    <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($utilizador['nome']) ?>" required>
+                    <input type="text" class="form-control" id="nome" placeholder="Digite o nome" name="nome" value="<?= htmlspecialchars($utilizador['nome']) ?>" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
-                    <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($utilizador['email']) ?>" required>
+                    <input type="email" class="form-control" id="email" placeholder="Digite o email" name="email" value="<?= htmlspecialchars($utilizador['email']) ?>" required>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>

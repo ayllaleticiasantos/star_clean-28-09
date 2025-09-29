@@ -2,7 +2,7 @@
 // 1. VERIFICAÇÃO DE SEGURANÇA
 session_start();
 
-// Segurança: Apenas administradores podem aceder
+// Segurança: Apenas administradores podem acessar esta página
 if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'admin') {
     header("Location: ../pages/login.php");
     exit();

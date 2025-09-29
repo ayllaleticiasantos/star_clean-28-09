@@ -84,11 +84,11 @@ include '../includes/navbar.php';
             <form action="redefinir-senha.php?token=<?= htmlspecialchars($token) ?>" method="post">
                 <div class="mb-3">
                     <label for="nova_senha" class="form-label">Nova Senha:</label>
-                    <input type="password" class="form-control" name="nova_senha" id="nova_senha" required>
+                    <input type="password" class="form-control" placeholder="Digite sua nova senha" name="nova_senha" id="nova_senha" required>
                 </div>
                 <div class="mb-3">
                     <label for="confirmar_senha" class="form-label">Confirme a Nova Senha:</label>
-                    <input type="password" class="form-control" name="confirmar_senha" id="confirmar_senha" required>
+                    <input type="password" class="form-control" placeholder="Confirme sua nova senha" name="confirmar_senha" id="confirmar_senha" required>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Redefinir Senha</button>
             </form>
