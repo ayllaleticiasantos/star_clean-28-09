@@ -26,14 +26,12 @@ include 'includes/navbar.php';
                     <h2 style="color: black;">Seja um dos nossos Clientes</h2>
                     <p style="color: black;">Encontre os melhores prestadores de serviços de limpeza.</p>
                 </div>
-            <!-- </div>
+            </div>
             <div class="carousel-item">
-                <img src="..." class="d-block w-100" alt="...">
+                <img src="img/feedbackCliente.png" class="d-block w-100" alt="Feedback de Clientes">
                 <div class="carousel-caption d-none d-md-block">
-                    <h5>Third slide label</h5>
-                    <p>Some representative placeholder content for the third slide.</p>
                 </div>
-            </div> -->  
+            </div> 
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselInicialSC"
             data-bs-slide="prev">

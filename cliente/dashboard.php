@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Segurança: Apenas clientes podem aceder a esta página
+// Segurança: Apenas clientes podem acessar a esta página
 if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'cliente') {
     header("Location: ../pages/login.php");
     exit();
@@ -26,8 +26,12 @@ include '../includes/navbar_logged_in.php';
                         <i class="fas fa-search fa-3x text-primary mb-3"></i>
                         <h5 class="card-title">Buscar Serviços</h5>
                         <p class="card-text">Encontre os melhores prestadores para o que você precisa.</p>
-                        <a href="#" class="btn btn-primary">Buscar Agora</a>
+                        <a href="buscar_servicos.php" class="btn btn-primary">
+                            Buscar Agora
+                            <span class="stretched-link"></span>
+                        </a>
                     </div>
+
                 </div>
             </div>
 
