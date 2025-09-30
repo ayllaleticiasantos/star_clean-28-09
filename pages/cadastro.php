@@ -44,6 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 4. Verifica se o e-mail já existe na tabela correspondente
             $stmt = $pdo->prepare("SELECT id FROM $tabela WHERE email = ?");
             $stmt->execute([$email]);
+            $tabelaAd = ($tipo === 'administrador') ? 'administradores' : 'prestadores';
+            $stmt = $pdo->prepare("SELECT ID FROM $tabelaAd WHERE email = ?");
+            $stmt->execute([$nome, $email, $senha]);
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $tabelaprest = ($tipo === 'prestador') ? 'prestadores' : 'clientes';
+            $stmt = $pdo->prepare("SELECT id FROM $tabelaprest WHERE email = ?");
+            $stmt->execute([$email]);
 
             if ($stmt->fetch()) {
                 $mensagem = '<div class="alert alert-danger">Este e-mail já está cadastrado. Tente outro.</div>';
@@ -51,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // 5. Criptografa a senha com um hash seguro
                 $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
+<<<<<<< Updated upstream
                 // 6. Insere os dados no banco de dados
                 switch ($tipo) {
                     case 'cliente':
@@ -68,6 +76,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmt->execute([$nome, $email, $senhaHash]);
                         break;
                 }
+=======
+                // 5. Insere os dados no banco de dados
+                if ($tipo === 'cliente') {
+                    $stmt = $pdo->prepare("INSERT INTO clientes (nome, email, senha) VALUES (?, ?, ?)");
+                    $stmt->execute([$nome, $email, $senhaHash]);
+                } else if ($tipo === 'prestador') { // Se for 'prestador'
+                    $especialidade = trim($_POST['especialidade']);
+                    $descricao = trim($_POST['descricao']);
+
+                $stmt = $pdo->prepare("INSERT INTO prestadores (nome, email, senha, especialidade, descricao) VALUES (?, ?, ?, ?, ?)");
+                    $stmt->execute([$nome, $email, $senhaHash, $especialidade, $descricao]);
+                }else if ($tipo === "administrador") {
+                    $stmt = $pdo->prepare("INSERT INTO administradores (nome, email, senha) VALUES (?, ?, ?)");
+                    $stmt->execute([$nome, $email, $senhaHash]);
+>>>>>>> Stashed changes
 
                 // 7. Define uma mensagem de sucesso e redireciona para a página de login
                 $_SESSION['mensagem_sucesso'] = "Cadastro realizado com sucesso! Faça o login para continuar.";
@@ -168,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+<<<<<<< Updated upstream
     // Adiciona um ouvinte de evento para cada botão de rádio
     tipoRadios.forEach(function(radio) {
         radio.addEventListener('change', toggleCamposPrestador);
@@ -175,6 +199,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Garante que o estado inicial está correto ao carregar a página
     toggleCamposPrestador();
+=======
+    tipoCliente.addEventListener('change', toggleCamposPrestador);
+    tipoPrestador.addEventListener('change', toggleCamposPrestador);
+    tipoAdmin.addEventListener('change',toggleCamposPrestador)
+>>>>>>> Stashed changes
 });
 </script>
 
