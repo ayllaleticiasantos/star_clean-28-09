@@ -24,35 +24,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Obtém a conexão PDO
             $pdo = obterConexaoPDO();
 
-            // 3. Verifica se o e-mail já existe na tabela correspondente
-            $tabela = ($tipo === 'cliente') ? 'clientes' : 'prestadores';
+            // 3. Define a tabela correta com base no tipo de usuário
+            $tabela = '';
+            switch ($tipo) {
+                case 'cliente':
+                    $tabela = 'clientes';
+                    break;
+                case 'prestador':
+                    $tabela = 'prestadores';
+                    break;
+                case 'admin':
+                    $tabela = 'administradores';
+                    break;
+                default:
+                    // Se o tipo for inválido, interrompe e mostra um erro
+                    throw new Exception("Tipo de usuário inválido.");
+            }
+
+            // 4. Verifica se o e-mail já existe na tabela correspondente
             $stmt = $pdo->prepare("SELECT id FROM $tabela WHERE email = ?");
             $stmt->execute([$email]);
 
             if ($stmt->fetch()) {
                 $mensagem = '<div class="alert alert-danger">Este e-mail já está cadastrado. Tente outro.</div>';
             } else {
-                // 4. Criptografa a senha com um hash seguro
+                // 5. Criptografa a senha com um hash seguro
                 $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-                // 5. Insere os dados no banco de dados
-                if ($tipo === 'cliente') {
-                    $stmt = $pdo->prepare("INSERT INTO clientes (nome, email, senha) VALUES (?, ?, ?)");
-                    $stmt->execute([$nome, $email, $senhaHash]);
-                } else { // Se for 'prestador'
-                    $especialidade = trim($_POST['especialidade']);
-                    $descricao = trim($_POST['descricao']);
-
-                    $stmt = $pdo->prepare("INSERT INTO prestadores (nome, email, senha, especialidade, descricao) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$nome, $email, $senhaHash, $especialidade, $descricao]);
+                // 6. Insere os dados no banco de dados
+                switch ($tipo) {
+                    case 'cliente':
+                        $stmt = $pdo->prepare("INSERT INTO clientes (nome, email, senha) VALUES (?, ?, ?)");
+                        $stmt->execute([$nome, $email, $senhaHash]);
+                        break;
+                    case 'prestador':
+                        $especialidade = trim($_POST['especialidade']);
+                        $descricao = trim($_POST['descricao']);
+                        $stmt = $pdo->prepare("INSERT INTO prestadores (nome, email, senha, especialidade, descricao) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->execute([$nome, $email, $senhaHash, $especialidade, $descricao]);
+                        break;
+                    case 'admin':
+                        $stmt = $pdo->prepare("INSERT INTO administradores (nome, email, senha) VALUES (?, ?, ?)");
+                        $stmt->execute([$nome, $email, $senhaHash]);
+                        break;
                 }
 
-                // 6. Define uma mensagem de sucesso e redireciona para a página de login
+                // 7. Define uma mensagem de sucesso e redireciona para a página de login
                 $_SESSION['mensagem_sucesso'] = "Cadastro realizado com sucesso! Faça o login para continuar.";
                 header("Location: login.php");
                 exit(); // Encerra o script para garantir que o redirecionamento ocorra
             }
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             // Em um ambiente de produção, seria bom logar o erro em vez de exibi-lo
             $mensagem = '<div class="alert alert-danger">Erro ao cadastrar. Por favor, tente novamente.</div>';
             // error_log("Erro no cadastro: " . $e->getMessage());
@@ -103,6 +125,12 @@ include '../includes/navbar.php';
                         Prestador (Quero oferecer serviços)
                     </label>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="tipo" id="tipoAdmin" value="admin">
+                    <label class="form-check-label" for="tipoAdmin">
+                        Administrador
+                    </label>
+                </div>
             </div>
 
             <div id="camposPrestador" style="display: none;">
@@ -128,20 +156,25 @@ include '../includes/navbar.php';
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const tipoCliente = document.getElementById('tipoCliente');
-    const tipoPrestador = document.getElementById('tipoPrestador');
+    const tipoRadios = document.querySelectorAll('input[name="tipo"]');
     const camposPrestador = document.getElementById('camposPrestador');
 
     function toggleCamposPrestador() {
-        if (tipoPrestador.checked) {
+        // Mostra os campos extras apenas se o tipo "Prestador" estiver selecionado
+        if (document.getElementById('tipoPrestador').checked) {
             camposPrestador.style.display = 'block';
         } else {
             camposPrestador.style.display = 'none';
         }
     }
 
-    tipoCliente.addEventListener('change', toggleCamposPrestador);
-    tipoPrestador.addEventListener('change', toggleCamposPrestador);
+    // Adiciona um ouvinte de evento para cada botão de rádio
+    tipoRadios.forEach(function(radio) {
+        radio.addEventListener('change', toggleCamposPrestador);
+    });
+
+    // Garante que o estado inicial está correto ao carregar a página
+    toggleCamposPrestador();
 });
 </script>
 
