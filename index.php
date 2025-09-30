@@ -28,7 +28,7 @@ include 'includes/navbar.php';
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="img/feedbackCliente.png" class="d-block w-100" alt="Feedback de Clientes">
+                <img src="img/feedbackCliente.png" class="d-block w-100" alt="Faça Parte da Nossa Equipe">
                 <div class="carousel-caption d-none d-md-block">
                 </div>
             </div> 
