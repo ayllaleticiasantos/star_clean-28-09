@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `db_starClean`.`Cliente` (
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) )
 ENGINE = InnoDB;
 
-
+ 
 -- -----------------------------------------------------
 -- Table `db_starClean`.`Prestador`
 -- -----------------------------------------------------

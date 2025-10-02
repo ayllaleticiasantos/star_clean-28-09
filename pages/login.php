@@ -26,28 +26,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $pdo = obterConexaoPDO();
 
-            // Define a tabela conforme o tipo
+            // Define a tabela conforme o tipo (CORRIGIDO)
             switch ($tipo) {
                 case 'cliente':
-                    $tabela = 'clientes';
+                    $tabela = 'Cliente';
                     break;
                 case 'prestador':
-                    $tabela = 'prestadores';
+                    $tabela = 'Prestador';
                     break;
                 case 'admin':
-                    $tabela = 'administradores';
+                    $tabela = 'Administrador';
                     break;
                 default:
                     throw new Exception("Tipo de usuário inválido.");
             }
 
-            // Busca o usuário pelo e-mail
-            $stmt = $pdo->prepare("SELECT id, nome, email, senha FROM $tabela WHERE email = ?");
+            // Busca o usuário pelo e-mail (CORRIGIDO)
+            $stmt = $pdo->prepare("SELECT id, nome, email, password FROM $tabela WHERE email = ?");
             $stmt->execute([$email]);
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verifica senha
-            if ($usuario && password_verify($senha, $usuario['senha'])) {
+            // Verifica senha (CORRIGIDO)
+            if ($usuario && password_verify($senha, $usuario['password'])) {
                 // Sessão do usuário
                 $_SESSION['usuario_id']   = $usuario['id'];
                 $_SESSION['usuario_nome'] = $usuario['nome'];

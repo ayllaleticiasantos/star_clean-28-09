@@ -17,7 +17,7 @@ include '../includes/sidebar.php';
 <div class="container-fluid">
     <h1>Painel de Controle</h1>
     <hr>
-
+<a href="cadastraraadm.php">Cadastrar Administrador</a>
     <h3>Bem-vindo(a), <?= htmlspecialchars($_SESSION['usuario_nome']) ?>!</h3>
 
     <p>Este é o seu painel de controle. A partir daqui, você poderá gerir todas as funcionalidades do sistema.</p>
