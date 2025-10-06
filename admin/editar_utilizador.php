@@ -15,12 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tipo = $_POST['tipo'];
     $nome = trim($_POST['nome']);
     $email = trim($_POST['email']);
+    $senha = trim($_POST['senha']);
     $tabela = ($tipo === 'cliente') ? 'clientes' : 'prestadores';
 
     try {
         $pdo = obterConexaoPDO();
-        $stmt = $pdo->prepare("UPDATE $tabela SET nome = ?, email = ? WHERE id = ?");
-        $stmt->execute([$nome, $email, $id]);
+        $stmt = $pdo->prepare("UPDATE $tabela SET nome = ?, email = ?, senha = ? WHERE id = ?");
+        $stmt->execute([$nome, $email, $senha, $id]);
 
         $_SESSION['mensagem_sucesso'] = "Utilizador atualizado com sucesso!";
         header("Location: gerir_utilizadores.php");

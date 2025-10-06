@@ -11,10 +11,12 @@ require_once '../config/db.php';
 $mensagem = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $tipo = $_POST['tipo'];
+    $nome = trim($_POST['nome']);
+    $sobrenome = trim($_POST['sobrenome']);
     $email = trim($_POST['email']);
     $senha = $_POST['senha'];
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+    $tipo = $_POST['tipo'];
 
     try {
         $pdo = obterConexaoPDO();
@@ -63,6 +65,15 @@ include '../includes/navbar_logged_in.php';
                     <div class="mb-3">
                         <label for="senha" class="form-label">Senha:</label>
                         <input type="password" class="form-control" name="senha" id="senha" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo" class="form-label">Tipo:</label>
+                        <select class="form-select" name="tipo" id="tipo" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="admin">Administrador Geral</option>
+                            <option value="user">Administrador Usuário</option>
+                            <option value="moderator">Administrador Moderador</option>
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
                 </div>

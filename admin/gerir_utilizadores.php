@@ -24,11 +24,12 @@ if (isset($_SESSION['mensagem_erro'])) {
 try {
     // Busca os utilizadores no banco de dados
     $pdo = obterConexaoPDO();
-    $clientes = $pdo->query("SELECT id, nome, email FROM clientes")->fetchAll();
-    $prestadores = $pdo->query("SELECT id, nome, email FROM prestadores")->fetchAll();
+    $clientes = $pdo->query("SELECT id, nome, sobrenome, data_nascimento, telefone, cpf, criado_em, atualizado_em, email FROM cliente")->fetchAll();
+    $prestadores = $pdo->query("SELECT id, nome_razão_social, sobrenome_nome_fantasia, cpf_cnpj, email, telefone, especialidade, criado_em, atualizado_em FROM prestador")->fetchAll();
 } catch (PDOException $e) {
     die("Erro ao buscar utilizadores: " . $e->getMessage());
 }
+
 
 include '../includes/header.php';
 include '../includes/navbar_logged_in.php'; 
@@ -47,8 +48,13 @@ include '../includes/sidebar.php';
             <thead class="thead-dark">
                 <tr>
                     <th style="width: 10%;">ID</th>
-                    <th style="width: 35%;">Nome</th>
-                    <th style="width: 35%;">Email</th>
+                    <th style="width: 25%;">Nome</th>
+                    <th style="width: 25%;">Sobrenome</th>
+                    <th style="width: 25%;">Data de Nascimento</th>
+                    <th style="width: 25%;">Email</th>
+                    <th style="width: 25%;">Telefone</th>
+                    <th style="width: 25%;">Data de Criação</th>
+                    <th style="width: 25%;">Data de Atualização</th>
                     <th style="width: 20%;">Ações</th>
                 </tr>
             </thead>
@@ -57,7 +63,12 @@ include '../includes/sidebar.php';
                     <tr>
                         <td><?= htmlspecialchars($cliente['id']) ?></td>
                         <td><?= htmlspecialchars($cliente['nome']) ?></td>
+                        <td><?= htmlspecialchars($cliente['sobrenome']) ?></td>
+                        <td><?= htmlspecialchars($cliente['data_nascimento']) ?></td>
                         <td><?= htmlspecialchars($cliente['email']) ?></td>
+                        <td><?= htmlspecialchars($cliente['telefone']) ?></td>
+                        <td><?= htmlspecialchars($cliente['criado_em']) ?></td>
+                        <td><?= htmlspecialchars($cliente['atualizado_em']) ?></td> 
                         <td>
                             <div class="d-flex gap-2">
                                 <a href="editar_utilizador.php?id=<?= $cliente['id'] ?>&tipo=cliente" class="btn btn-warning btn-sm">Editar</a>
@@ -81,8 +92,14 @@ include '../includes/sidebar.php';
              <thead class="thead-dark">
                 <tr>
                     <th style="width: 10%;">ID</th>
-                    <th style="width: 35%;">Nome</th>
-                    <th style="width: 35%;">Email</th>
+                    <th style="width: 25%;">Razão Social</th>
+                    <th style="width: 25%;">Nome Fantasia</th>
+                    <th style="width: 25%;">CPF/CNPJ</th>
+                    <th style="width: 25%;">Email</th>
+                    <th style="width: 25%;">Telefone</th>
+                    <th style="width: 25%;">Especialidade</th>
+                    <th style="width: 25%;">Data de Criação</th>
+                    <th style="width: 25%;">Data de Atualização</th>
                     <th style="width: 20%;">Ações</th>
                 </tr>
             </thead>
@@ -90,8 +107,14 @@ include '../includes/sidebar.php';
                 <?php foreach ($prestadores as $prestador): ?>
                     <tr>
                         <td><?= htmlspecialchars($prestador['id']) ?></td>
-                        <td><?= htmlspecialchars($prestador['nome']) ?></td>
+                        <td><?= htmlspecialchars($prestador['nome_razão_social']) ?></td>
+                        <td><?= htmlspecialchars($prestador['sobrenome_nome_fantasia']) ?></td>
+                        <td><?= htmlspecialchars($prestador['cpf_cnpj']) ?></td>
                         <td><?= htmlspecialchars($prestador['email']) ?></td>
+                        <td><?= htmlspecialchars($prestador['telefone']) ?></td>
+                        <td><?= htmlspecialchars($prestador['especialidade']) ?></td>
+                        <td><?= htmlspecialchars($prestador['criado_em']) ?></td>
+                        <td><?= htmlspecialchars($prestador['atualizado_em']) ?></td>
                         <td>
                             <div class="d-flex gap-2">
                                 <a href="editar_utilizador.php?id=<?= $prestador['id'] ?>&tipo=prestador" class="btn btn-warning btn-sm">Editar</a>
