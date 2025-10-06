@@ -3,63 +3,72 @@
 
 // Database connection (adjust credentials as needed)
 include('../config/config.php');
-include('../config/db.php'); 
+include('../config/db.php');
 
+session_start();
+require_once '../config/db.php';
 
-if ($conn->connect_error) {
-    die('Erro de conexão: ' . $conn->connect_error);
-}
-
-$nome = $email = $senha = $msg = '';
+$mensagem = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome = trim($_POST['nome']);
-    $sobrenome = trim($_POST['sobrenome']);
+    $tipo = $_POST['tipo'];
     $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
+    $senha = $_POST['senha'];
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-    if ($nome && $email && $password) {
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-        $stmt = $conn->prepare("INSERT INTO administrador (nome, sobrenome, email, password) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $nome, $sobrenome, $email, $password_hash);
-
-        $stmt->execute();
-        if ($stmt->execute()) {
-            $msg = "Administrador cadastrado com sucesso!";
+    try {
+        $pdo = obterConexaoPDO();
+        $stmt = $pdo->prepare('INSERT INTO administrador (nome, sobrenome, email, password, tipo) VALUES (:nome, :sobrenome, :email, :password, :tipo)');
+        $stmt->execute(['nome' => $nome, 'sobrenome' => $sobrenome, 'email' => $email, 'password' => $senhaHash, 'tipo' => $tipo]);
+        $mensagem = 'Administrador cadastrado com sucesso!';
+    } catch (PDOException $e) {
+        if ($e->getCode() == 23000) { // Código de erro para violação de chave única
+            $mensagem = 'Erro: Email já cadastrado.';
         } else {
-            $msg = "Erro ao cadastrar: " . $stmt->error;
+            $mensagem = 'Erro ao cadastrar administrador: ' . $e->getMessage();
         }
-        $stmt->close();
-    } else {
-        $msg = "Preencha todos os campos.";
     }
 }
+
+include '../includes/header.php';
+include '../includes/navbar_logged_in.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
+
     <title>Cadastrar Administrador</title>
-</head>
-<body>
-    <h2>Cadastrar Administrador</h2>
-    <?php if ($msg) echo "<p>$msg</p>"; ?>
-    <form method="post">
-        <label>Nome:<br>
-            <input type="text" name="nome" required>
-        </label><br><br>
-        <label>Sobrenome:<br>
-            <input type="text" name="sobrenome" required>
-        </label><br><br>
-        <label>Email:<br>
-            <input type="email" name="email" required>
-        </label><br><br>
-        <label>Senha:<br>
-            <input type="password" name="password" required>
-        </label><br><br>
-        <button type="submit">Cadastrar</button>
+
+    
+    <?php if ($mensagem)
+        echo "<p>$mensagem</p>"; ?>
+
+    <form action="cadastraraadm.php" method="post">
+        <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+            <div class="card p-4 shadow-sm" id="camposAdmin" style="width: 100%; max-width: 600px;">
+                <h2 class="text-center mb-4">Cadastrar Administrador</h2>
+
+                <div class="mb-3">
+                    <label for="nome_admin" class="form-label">Nome:</label>
+                    <input type="text" class="form-control" name="nome" id="nome_admin">
+                </div>
+                    <div class="mb-3">
+                        <label for="sobrenome_admin" class="form-label">Sobrenome:</label>
+                        <input type="text" class="form-control" name="sobrenome" id="sobrenome_admin">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">E-mail:</label>
+                        <input type="email" class="form-control" name="email" id="email" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="senha" class="form-label">Senha:</label>
+                        <input type="password" class="form-control" name="senha" id="senha" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+                </div>
+
+               
     </form>
 </body>
+
 </html>

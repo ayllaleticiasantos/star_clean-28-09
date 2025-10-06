@@ -17,7 +17,7 @@ include '../includes/sidebar.php';
 <div class="container-fluid">
     <h1>Painel de Controle</h1>
     <hr>
-<a href="cadastraraadm.php">Cadastrar Administrador</a>
+
     <h3>Bem-vindo(a), <?= htmlspecialchars($_SESSION['usuario_nome']) ?>!</h3>
 
     <p>Este é o seu painel de controle. A partir daqui, você poderá gerir todas as funcionalidades do sistema.</p>
@@ -26,6 +26,20 @@ include '../includes/sidebar.php';
     <div class="alert alert-info mt-4">
         Próximos passos: Adicione aqui os cartões (cards), tabelas e gráficos com as funcionalidades principais do sistema.
     </div>
+    <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <i class=" fa-3x bi bi-plus-square-fill text-primary mb-3"></i>
+                        <h5 class="card-title">Cadastrar Administrador</h5>
+                        <p class="card-text">Adicione um novo administrador ao sistema.</p>
+                        <a href="cadastraraadm.php" class="btn btn-primary">
+                            Cadastrar Agora
+                            <span class="stretched-link"></span>
+                        </a>
+                    </div>
+
+                </div>
 </div>
 
 <?php
