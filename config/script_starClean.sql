@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS `db_starClean`.`Prestador` (
   `telefone` VARCHAR(20) NOT NULL,
   `especialidade` VARCHAR(100) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
+  `descricao` TEXT not NULL,
   `criado_em` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `atualizado_em` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Administrador_id` INT NOT NULL,

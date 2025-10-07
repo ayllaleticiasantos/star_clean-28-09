@@ -14,69 +14,74 @@ if (isset($_SESSION['mensagem_sucesso'])) {
     unset($_SESSION['mensagem_sucesso']);
 }
 
+// Lista de tabelas e destinos (em ordem de prioridade)
+// Admin é o primeiro a ser verificado para garantir prioridade de login
+$tipos_usuarios = [
+    'administrador'     => ['tabela' => 'Administrador', 'destino' => '../admin/dashboard.php'],
+    'prestador' => ['tabela' => 'Prestador', 'destino' => '../prestador/dashboard.php'],
+    'cliente'   => ['tabela' => 'Cliente', 'destino' => '../cliente/dashboard.php'],
+];
+
+
 // Verifica se o formulário foi submetido
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Apenas email e senha são necessários (o campo 'tipo' foi removido do formulário)
     $email = trim($_POST['email']);
     $senha = $_POST['senha'];
-    $tipo = $_POST['tipo'];
 
-    if (empty($email) || empty($senha) || empty($tipo)) {
-        $mensagem_erro = '<div class="alert alert-danger">Por favor, preencha todos os campos.</div>';
+    // 1. Validação básica
+    if (empty($email) || empty($senha)) {
+        $mensagem_erro = '<div class="alert alert-danger">Por favor, preencha o e-mail e a senha.</div>';
     } else {
+        $usuario_encontrado = false;
+        
         try {
             $pdo = obterConexaoPDO();
 
-            // Define a tabela conforme o tipo (CORRIGIDO)
-            switch ($tipo) {
-                case 'cliente':
-                    $tabela = 'Cliente';
-                    break;
-                case 'prestador':
-                    $tabela = 'Prestador';
-                    break;
-                case 'admin':
-                    $tabela = 'Administrador';
-                    break;
-                default:
-                    throw new Exception("Tipo de usuário inválido.");
-            }
+            // 2. Itera sobre as tabelas para encontrar o usuário
+            foreach ($tipos_usuarios as $tipo => $dados) {
+                $tabela = $dados['tabela'];
+                $destino = $dados['destino'];
 
-            // Busca o usuário pelo e-mail (CORRIGIDO)
-            $stmt = $pdo->prepare("SELECT id, nome, email, password FROM $tabela WHERE email = ?");
-            $stmt->execute([$email]);
-            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+                // Busca o usuário pelo e-mail
+                $stmt = $pdo->prepare("SELECT id, nome, email, password FROM `$tabela` WHERE email = ?");
+                $stmt->execute([$email]);
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verifica senha (CORRIGIDO)
-            if ($usuario && password_verify($senha, $usuario['password'])) {
-                // Sessão do usuário
-                $_SESSION['usuario_id']   = $usuario['id'];
-                $_SESSION['usuario_nome'] = $usuario['nome'];
-                $_SESSION['usuario_tipo'] = $tipo;
+                // Se o usuário for encontrado na tabela atual, verifica a senha
+                if ($usuario) {
+                    if (password_verify($senha, $usuario['password'])) {
+                        // Login bem-sucedido!
+                        $_SESSION['usuario_id']     = $usuario['id'];
+                        $_SESSION['usuario_nome']   = $usuario['nome'];
+                        $_SESSION['usuario_tipo']   = $tipo; // Armazena o tipo encontrado ('administrador', 'prestador', ou 'cliente')
+                        
+                        $usuario_encontrado = true;
+                        header("Location: " . $destino);
+                        exit; // Termina o script e redireciona
 
-                // Redireciona para o dashboard correto
-                switch ($tipo) {
-                    case 'admin':
-                        header("Location: ../admin/dashboard.php");
-                        break;
-                    case 'prestador':
-                        header("Location: ../prestador/dashboard.php");
-                        break;
-                    case 'cliente':
-                        header("Location: ../cliente/dashboard.php");
-                        break;
+                    } else {
+                        // Usuário encontrado, mas senha incorreta. Interrompe a busca nas outras tabelas
+                        $mensagem_erro = '<div class="alert alert-danger">E-mail ou senha inválidos.</div>';
+                        $usuario_encontrado = true;
+                        break; 
+                    }
                 }
-                exit;
-            } else {
-                $mensagem_erro = '<div class="alert alert-danger">E-mail ou senha inválidos.</div>';
+            } // Fim do loop foreach
+
+            // 3. Se o loop terminou e o usuário não foi encontrado em NENHUMA tabela
+            if (!$usuario_encontrado) {
+                 $mensagem_erro = '<div class="alert alert-danger">E-mail ou senha inválidos.</div>';
             }
+
         } catch (Exception $e) {
             $mensagem_erro = '<div class="alert alert-danger">Erro no sistema. Tente novamente.</div>';
-            // error_log($e->getMessage()); // útil em produção
+            // Para debug: error_log($e->getMessage());
         }
     }
 }
 
-// Layout
+// Layout e HTML
 include '../includes/header.php';
 include '../includes/navbar.php';
 ?>
@@ -98,16 +103,7 @@ include '../includes/navbar.php';
                 <label for="senha" class="form-label">Senha:</label>
                 <input type="password" class="form-control" name="senha" id="senha" placeholder="Digite sua senha" required>
             </div>
-
-            <div class="mb-3">
-                <label for="tipo" class="form-label">Tipo de usuário:</label>
-                <select name="tipo" id="tipo" class="form-select" required>
-                    <option value="cliente">Cliente</option>
-                    <option value="prestador">Prestador</option>
-                    <option value="admin">Administrador</option>
-                </select>
-            </div>
-
+            
             <button type="submit" class="btn btn-primary w-100">Entrar</button>
         </form>
 

@@ -15,13 +15,13 @@ $tipo_usuario = $_SESSION['usuario_tipo'];
 $tabela = '';
 switch ($tipo_usuario) {
     case 'cliente':
-        $tabela = 'clientes';
+        $tabela = 'cliente';
         break;
     case 'prestador':
-        $tabela = 'prestadores';
+        $tabela = 'prestador';
         break;
     case 'admin':
-        $tabela = 'administradores';
+        $tabela = 'administrador';
         break;
 }
 
