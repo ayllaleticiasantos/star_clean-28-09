@@ -16,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
     $email = trim($_POST['email']);
     $senha = trim($_POST['senha']);
-    $tabela = ($tipo === 'cliente') ? 'clientes' : 'prestadores';
+    $tabela = ($tipo === 'cliente') ? 'Cliente' : 'Prestador';
 
     try {
         $pdo = obterConexaoPDO();
-        $stmt = $pdo->prepare("UPDATE $tabela SET nome = ?, email = ?, senha = ? WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE `$tabela` SET nome = ?, email = ?, password = ? WHERE id = ?");
         $stmt->execute([$nome, $email, $senha, $id]);
 
         $_SESSION['mensagem_sucesso'] = "Utilizador atualizado com sucesso!";
@@ -39,13 +39,29 @@ $utilizador = null;
 if (isset($_GET['id']) && isset($_GET['tipo'])) {
     $id = $_GET['id'];
     $tipo = $_GET['tipo'];
-    $tabela = ($tipo === 'cliente') ? 'clientes' : 'prestadores';
-
+    
+    // Corrigido para buscar os dados corretos da tabela correspondente
+    $tabela = ($tipo === 'cliente') ? 'Cliente' : 'Prestador';
+    
     try {
         $pdo = obterConexaoPDO();
-        $stmt = $pdo->prepare("SELECT * FROM $tabela WHERE id = ?");
-        $stmt->execute([$id]);
-        $utilizador = $stmt->fetch();
+        
+        // Use os nomes de coluna corretos para cada tipo de tabela
+        if ($tipo === 'cliente') {
+            $stmt = $pdo->prepare("SELECT id, nome, sobrenome, email FROM `$tabela` WHERE id = ?");
+            $stmt->execute([$id]);
+            $utilizador = $stmt->fetch();
+        } elseif ($tipo === 'prestador') {
+            $stmt = $pdo->prepare("SELECT id, nome_razão_social, sobrenome_nome_fantasia, email FROM `$tabela` WHERE id = ?");
+            $stmt->execute([$id]);
+            $utilizador = $stmt->fetch();
+            
+            // Renomeia as chaves para corresponderem ao formulário
+            if ($utilizador) {
+                $utilizador['nome'] = $utilizador['nome_razão_social'];
+                $utilizador['sobrenome'] = $utilizador['sobrenome_nome_fantasia'];
+            }
+        }
     } catch (PDOException $e) {
         die("Erro ao buscar dados do utilizador: " . $e->getMessage());
     }
@@ -58,7 +74,7 @@ if (isset($_GET['id']) && isset($_GET['tipo'])) {
 }
 
 include '../includes/header.php';
-include '../includes/navbar_logged_in.php'; // Alterado para a navbar de logado
+include '../includes/navbar_logged_in.php'; 
 include '../includes/sidebar.php';
 ?>
 

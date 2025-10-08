@@ -168,3 +168,4 @@ document.addEventListener('DOMContentLoaded', function () {
 <?php
 // Resto do código PHP, se necessário
 include '../includes/footer.php';
+?>

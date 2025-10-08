@@ -1,80 +1,116 @@
 <?php
 session_start();
-// Segurança: Apenas prestadores podem aceder
+require_once '../config/db.php';
+
+// Segurança: Apenas prestadores podem aceder a esta página
 if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'prestador') {
     header("Location: ../pages/login.php");
     exit();
 }
 
+$id_prestador_logado = $_SESSION['usuario_id'];
+
+// Lógica para buscar as contagens de agendamentos
+$counts = [
+    'pendente' => 0,
+    'aceito' => 0,
+    'realizado' => 0,
+    'cancelado' => 0
+];
+
+try {
+    $pdo = obterConexaoPDO();
+    $stmt = $pdo->prepare("SELECT status, COUNT(*) AS total FROM Agendamento WHERE Prestador_id = ? GROUP BY status");
+    $stmt->execute([$id_prestador_logado]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($results as $row) {
+        $counts[$row['status']] = $row['total'];
+    }
+} catch (PDOException $e) {
+    error_log("Erro ao buscar contagens de agendamentos: " . $e->getMessage());
+}
+
 include '../includes/header.php';
-// ATENÇÃO: Estamos a incluir a nova navbar para a área logada
-include '../includes/navbar_logged_in.php'; 
+include '../includes/navbar_logged_in.php';
 ?>
 
 <main class="d-flex">
-    <?php include '../includes/sidebar.php'; // O sidebar agora faz parte do layout principal ?>
+    <?php include '../includes/sidebar.php'; ?>
 
     <div class="container-fluid p-4">
-        
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card border-0 shadow-sm">
+        <h1 class="mb-4">Painel do Prestador</h1>
+        <h3>Bem-vindo(a), <?= htmlspecialchars($_SESSION['usuario_nome']) ?>!</h3>
+        <hr>
+
+        <div class="row text-center">
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100 shadow-sm border-warning">
                     <div class="card-body">
-                        <h5 class="card-title mb-4">Resumo do Prestador</h5>
-                        
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                Avaliação Média
-                                <span class="text-warning">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                </span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                Serviços Concluídos
-                                <span>125</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                Cancelamentos
-                                <span>3</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <b>Saldo Atual</b>
-                                <b class="text-success">R$ 450,00</b>
-                            </li>
-                        </ul>
+                        <h5 class="card-title text-warning">Agendamentos Pendentes</h5>
+                        <h2 class="card-text display-4"><?= $counts['pendente'] ?></h2>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-6">
-                 <div class="card border-0 shadow-sm">
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100 shadow-sm border-success">
                     <div class="card-body">
-                        <h5 class="card-title mb-4">Próximos Agendamentos</h5>
-                        
-                        <div class="list-group list-group-flush">
-                            <div class="list-group-item px-0">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">Maria Silva</h6>
-                                    <small>18/09 – 14h00</small>
-                                </div>
-                                <p class="mb-2 text-muted">Limpeza de Manutenção</p>
-                                <div>
-                                    <button class="btn btn-outline-success btn-sm">Aceitar</button>
-                                    <button class="btn btn-outline-danger btn-sm">Recusar</button>
-                                </div>
-                            </div>
-                            <div class="list-group-item px-0">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">João Pedro</h6>
-                                    <small>20/09 – 10h00</small>
-                                </div>
-                                <p class="mb-2 text-muted">Passadoria</p>
-                                <div>
-                                    <button class="btn btn-outline-success btn-sm">Aceitar</button>
-                                    <button class="btn btn-outline-danger btn-sm">Recusar</button>
-                                </div>
-                            </div>
-                        </div>
+                        <h5 class="card-title text-success">Agendamentos Aceites</h5>
+                        <h2 class="card-text display-4"><?= $counts['aceito'] ?></h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100 shadow-sm border-primary">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Serviços Concluídos</h5>
+                        <h2 class="card-text display-4"><?= $counts['realizado'] ?></h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100 shadow-sm border-danger">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger">Agendamentos Cancelados</h5>
+                        <h2 class="card-text display-4"><?= $counts['cancelado'] ?></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <i class="fas fa-list fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Gerir Serviços</h5>
+                        <p class="card-text">Adicione, edite ou remova os seus serviços.</p>
+                        <a href="gerir_servicos.php" class="btn btn-primary">Gerir Serviços</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-alt fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Gerir Agendamentos</h5>
+                        <p class="card-text">Veja seus agendamentos pendentes e aceitos.</p>
+                        <a href="gerir_agendamentos.php" class="btn btn-success">Ver Agendamentos</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-edit fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Meu Perfil</h5>
+                        <p class="card-text">Mantenha seus dados de contato e de acesso atualizados.</p>
+                        <a href="../pages/perfil.php" class="btn btn-warning">Editar Perfil</a>
                     </div>
                 </div>
             </div>

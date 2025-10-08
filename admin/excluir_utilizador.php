@@ -17,16 +17,16 @@ if (isset($_GET['id']) && isset($_GET['tipo'])) {
     // Determina a tabela correta com base no tipo
     $tabela = '';
     if ($tipo === 'cliente') {
-        $tabela = 'clientes';
+        $tabela = 'Cliente';
     } elseif ($tipo === 'prestador') {
-        $tabela = 'prestadores';
+        $tabela = 'Prestador';
     }
 
     // Se a tabela for válida, executa a exclusão
     if ($tabela) {
         try {
             $pdo = obterConexaoPDO();
-            $stmt = $pdo->prepare("DELETE FROM $tabela WHERE id = ?");
+            $stmt = $pdo->prepare("DELETE FROM `$tabela` WHERE id = ?");
             $stmt->execute([$id]);
 
             // Define uma mensagem de sucesso para ser exibida na página de gestão

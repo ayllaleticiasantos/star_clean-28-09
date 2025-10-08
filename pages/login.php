@@ -17,7 +17,7 @@ if (isset($_SESSION['mensagem_sucesso'])) {
 // Lista de tabelas e destinos (em ordem de prioridade)
 // Admin é o primeiro a ser verificado para garantir prioridade de login
 $tipos_usuarios = [
-    'administrador'     => ['tabela' => 'Administrador', 'destino' => '../admin/dashboard.php'],
+    'admin'     => ['tabela' => 'Administrador', 'destino' => '../admin/dashboard.php'],
     'prestador' => ['tabela' => 'Prestador', 'destino' => '../prestador/dashboard.php'],
     'cliente'   => ['tabela' => 'Cliente', 'destino' => '../cliente/dashboard.php'],
 ];
@@ -43,8 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $tabela = $dados['tabela'];
                 $destino = $dados['destino'];
 
+                // Ajusta a coluna do nome para a tabela Prestador
+                $coluna_nome = ($tipo === 'prestador') ? 'nome_razão_social' : 'nome';
+                
                 // Busca o usuário pelo e-mail
-                $stmt = $pdo->prepare("SELECT id, nome, email, password FROM `$tabela` WHERE email = ?");
+                $stmt = $pdo->prepare("SELECT id, `$coluna_nome` AS nome, email, password FROM `$tabela` WHERE email = ?");
                 $stmt->execute([$email]);
                 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -54,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         // Login bem-sucedido!
                         $_SESSION['usuario_id']     = $usuario['id'];
                         $_SESSION['usuario_nome']   = $usuario['nome'];
-                        $_SESSION['usuario_tipo']   = $tipo; // Armazena o tipo encontrado ('administrador', 'prestador', ou 'cliente')
+                        $_SESSION['usuario_tipo']   = $tipo; // Armazena o tipo encontrado ('admin', 'prestador', ou 'cliente')
                         
                         $usuario_encontrado = true;
                         header("Location: " . $destino);

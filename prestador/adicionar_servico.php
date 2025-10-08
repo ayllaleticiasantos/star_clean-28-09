@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             $pdo = obterConexaoPDO();
-            $stmt = $pdo->prepare("INSERT INTO servicos (prestador_id, titulo, descricao, preco) VALUES (?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO Servico (prestador_id, titulo, descricao, preco) VALUES (?, ?, ?, ?)");
             $stmt->execute([$prestador_id, $titulo, $descricao, $preco]);
 
             $_SESSION['mensagem_sucesso'] = "Serviço adicionado com sucesso!";

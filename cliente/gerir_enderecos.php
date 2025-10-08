@@ -2,13 +2,12 @@
 session_start();
 require_once '../config/db.php';
 
-// Segurança: Apenas prestadores podem aceder a esta página
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'prestador') {
+// Segurança: Apenas clientes podem aceder a esta página
+if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'cliente') {
     header("Location: ../pages/login.php");
     exit();
 }
 
-// Lógica para exibir mensagens de sucesso ou erro
 $mensagem_sucesso = '';
 if (isset($_SESSION['mensagem_sucesso'])) {
     $mensagem_sucesso = '<div class="alert alert-success">' . $_SESSION['mensagem_sucesso'] . '</div>';
@@ -21,16 +20,15 @@ if (isset($_SESSION['mensagem_erro'])) {
     unset($_SESSION['mensagem_erro']);
 }
 
-// Buscar apenas os serviços do prestador que está logado
-$id_prestador_logado = $_SESSION['usuario_id'];
-$servicos = [];
+$id_cliente = $_SESSION['usuario_id'];
+$enderecos = [];
 try {
     $pdo = obterConexaoPDO();
-    $stmt = $pdo->prepare("SELECT * FROM Servico WHERE prestador_id = ? ORDER BY id DESC");
-    $stmt->execute([$id_prestador_logado]);
-    $servicos = $stmt->fetchAll();
+    $stmt = $pdo->prepare("SELECT * FROM Endereco WHERE Cliente_id = ?");
+    $stmt->execute([$id_cliente]);
+    $enderecos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    die("Erro ao buscar os serviços: " . $e->getMessage());
+    $mensagem_erro = "Erro ao buscar endereços: " . $e->getMessage();
 }
 
 include '../includes/header.php';
@@ -42,8 +40,8 @@ include '../includes/navbar_logged_in.php';
 
     <div class="container-fluid p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Meus Serviços</h1>
-            <a href="adicionar_servico.php" class="btn btn-primary">Adicionar Novo Serviço</a>
+            <h1>Gerir Endereços</h1>
+            <a href="adicionar_endereco.php" class="btn btn-primary">Adicionar Novo Endereço</a>
         </div>
         
         <?= $mensagem_sucesso ?>
@@ -55,26 +53,26 @@ include '../includes/navbar_logged_in.php';
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Título</th>
-                                <th>Descrição</th>
-                                <th>Preço</th>
+                                <th>CEP</th>
+                                <th>Logradouro</th>
+                                <th>Número</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (empty($servicos)): ?>
+                            <?php if (empty($enderecos)): ?>
                                 <tr>
-                                    <td colspan="4" class="text-center">Nenhum serviço cadastrado.</td>
+                                    <td colspan="4" class="text-center">Nenhum endereço cadastrado.</td>
                                 </tr>
                             <?php else: ?>
-                                <?php foreach ($servicos as $servico): ?>
+                                <?php foreach ($enderecos as $endereco): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($servico['titulo']) ?></td>
-                                        <td><?= htmlspecialchars($servico['descricao']) ?></td>
-                                        <td>R$ <?= number_format($servico['preco'], 2, ',', '.') ?></td>
+                                        <td><?= htmlspecialchars($endereco['cep']) ?></td>
+                                        <td><?= htmlspecialchars($endereco['logradouro']) ?></td>
+                                        <td><?= htmlspecialchars($endereco['numero']) ?></td>
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-warning">Editar</a>
-                                            <a href="#" class="btn btn-sm btn-danger">Excluir</a>
+                                            <a href="editar_endereco.php?id=<?= $endereco['id'] ?>" class="btn btn-sm btn-warning">Editar</a>
+                                            <a href="excluir_endereco.php?id=<?= $endereco['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem a certeza de que deseja excluir este endereço?');">Excluir</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

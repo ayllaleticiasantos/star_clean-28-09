@@ -13,15 +13,19 @@ $tipo_usuario = $_SESSION['usuario_tipo'];
 
 // Determina a tabela correta com base no tipo de usuário
 $tabela = '';
+$coluna_nome = '';
 switch ($tipo_usuario) {
     case 'cliente':
-        $tabela = 'cliente';
+        $tabela = 'Cliente';
+        $coluna_nome = 'nome';
         break;
     case 'prestador':
-        $tabela = 'prestador';
+        $tabela = 'Prestador';
+        $coluna_nome = 'nome_razão_social';
         break;
     case 'admin':
-        $tabela = 'administrador';
+        $tabela = 'Administrador';
+        $coluna_nome = 'nome';
         break;
 }
 
@@ -34,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nome = trim($_POST['nome']);
         $email = trim($_POST['email']);
 
-        $stmt = $pdo->prepare("UPDATE $tabela SET nome = ?, email = ? WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE `$tabela` SET `$coluna_nome` = ?, email = ? WHERE id = ?");
         if ($stmt->execute([$nome, $email, $id_usuario])) {
             $_SESSION['usuario_nome'] = $nome; // Atualiza o nome na sessão também
             $_SESSION['mensagem_sucesso'] = "Dados atualizados com sucesso!";
@@ -53,13 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['mensagem_erro'] = "As novas senhas não correspondem.";
         } else {
             // Busca a senha atual no banco de dados para verificação
-            $stmt = $pdo->prepare("SELECT senha FROM $tabela WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT password FROM `$tabela` WHERE id = ?");
             $stmt->execute([$id_usuario]);
             $usuario = $stmt->fetch();
 
-            if ($usuario && password_verify($senha_atual, $usuario['senha'])) {
+            if ($usuario && password_verify($senha_atual, $usuario['password'])) {
                 $nova_senha_hash = password_hash($nova_senha, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("UPDATE $tabela SET senha = ? WHERE id = ?");
+                $stmt = $pdo->prepare("UPDATE `$tabela` SET password = ? WHERE id = ?");
                 if ($stmt->execute([$nova_senha_hash, $id_usuario])) {
                     $_SESSION['mensagem_sucesso'] = "Senha alterada com sucesso!";
                 } else {
@@ -78,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Busca os dados atuais do usuário para exibir no formulário
 $pdo = obterConexaoPDO();
-$stmt = $pdo->prepare("SELECT nome, email FROM $tabela WHERE id = ?");
+$stmt = $pdo->prepare("SELECT `$coluna_nome` as nome, email FROM `$tabela` WHERE id = ?");
 $stmt->execute([$id_usuario]);
 $usuario_atual = $stmt->fetch();
 

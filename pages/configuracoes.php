@@ -14,9 +14,9 @@ $tipo_usuario = $_SESSION['usuario_tipo'];
 // Determina a tabela correta com base no tipo de usuário
 $tabela = '';
 switch ($tipo_usuario) {
-    case 'cliente': $tabela = 'clientes'; break;
-    case 'prestador': $tabela = 'prestadores'; break;
-    case 'admin': $tabela = 'administradores'; break;
+    case 'cliente': $tabela = 'Cliente'; break;
+    case 'prestador': $tabela = 'Prestador'; break;
+    case 'admin': $tabela = 'Administrador'; break;
 }
 
 // Lógica para processar o formulário quando for enviado
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Se a checkbox estiver marcada, o valor é 1 (true), senão é 0 (false)
     $valor_notificacao = isset($_POST['notificacaoEmail']) ? 1 : 0;
 
-    $stmt = $pdo->prepare("UPDATE $tabela SET receber_notificacoes_email = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE `$tabela` SET receber_notificacoes_email = ? WHERE id = ?");
     if ($stmt->execute([$valor_notificacao, $id_usuario])) {
         $_SESSION['mensagem_sucesso'] = "Preferências salvas com sucesso!";
     } else {
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Busca a preferência atual do usuário no banco de dados para exibir na página
 $pdo = obterConexaoPDO();
-$stmt = $pdo->prepare("SELECT receber_notificacoes_email FROM $tabela WHERE id = ?");
+$stmt = $pdo->prepare("SELECT receber_notificacoes_email FROM `$tabela` WHERE id = ?");
 $stmt->execute([$id_usuario]);
 $config_usuario = $stmt->fetch();
 $prefere_email = $config_usuario['receber_notificacoes_email'] ?? 1; // Padrão é 1 (true)

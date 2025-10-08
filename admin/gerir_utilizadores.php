@@ -24,8 +24,8 @@ if (isset($_SESSION['mensagem_erro'])) {
 try {
     // Busca os utilizadores no banco de dados
     $pdo = obterConexaoPDO();
-    $clientes = $pdo->query("SELECT id, nome, sobrenome, data_nascimento, telefone, cpf, criado_em, atualizado_em, email FROM cliente")->fetchAll();
-    $prestadores = $pdo->query("SELECT id, nome_razão_social, sobrenome_nome_fantasia, cpf_cnpj, email, telefone, especialidade, criado_em, atualizado_em FROM prestador")->fetchAll();
+    $clientes = $pdo->query("SELECT id, nome, sobrenome, data_nascimento, telefone, cpf, criado_em, atualizado_em, email FROM Cliente")->fetchAll();
+    $prestadores = $pdo->query("SELECT id, nome_razão_social, sobrenome_nome_fantasia, cpf_cnpj, email, telefone, especialidade, criado_em, atualizado_em FROM Prestador")->fetchAll();
 } catch (PDOException $e) {
     die("Erro ao buscar utilizadores: " . $e->getMessage());
 }
@@ -44,18 +44,18 @@ include '../includes/sidebar.php';
 
     <h3 class="mt-5">Clientes</h3>
     <div class="table-responsive">
-        <table class="table table-striped table-hover" style="table-layout: fixed; width: 100%;">
+        <table class="table table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
-                    <th style="width: 10%;">ID</th>
-                    <th style="width: 25%;">Nome</th>
-                    <th style="width: 25%;">Sobrenome</th>
-                    <th style="width: 25%;">Data de Nascimento</th>
-                    <th style="width: 25%;">Email</th>
-                    <th style="width: 25%;">Telefone</th>
-                    <th style="width: 25%;">Data de Criação</th>
-                    <th style="width: 25%;">Data de Atualização</th>
-                    <th style="width: 20%;">Ações</th>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Sobrenome</th>
+                    <th>Data de Nascimento</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Data de Criação</th>
+                    <th>Data de Atualização</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,19 +88,19 @@ include '../includes/sidebar.php';
 
     <h3 class="mt-5">Prestadores de Serviço</h3>
     <div class="table-responsive">
-        <table class="table table-striped table-hover" style="table-layout: fixed; width: 100%;">
+        <table class="table table-striped table-hover">
              <thead class="thead-dark">
                 <tr>
-                    <th style="width: 10%;">ID</th>
-                    <th style="width: 25%;">Razão Social</th>
-                    <th style="width: 25%;">Nome Fantasia</th>
-                    <th style="width: 25%;">CPF/CNPJ</th>
-                    <th style="width: 25%;">Email</th>
-                    <th style="width: 25%;">Telefone</th>
-                    <th style="width: 25%;">Especialidade</th>
-                    <th style="width: 25%;">Data de Criação</th>
-                    <th style="width: 25%;">Data de Atualização</th>
-                    <th style="width: 20%;">Ações</th>
+                    <th>ID</th>
+                    <th>Razão Social</th>
+                    <th>Nome Fantasia</th>
+                    <th>CPF/CNPJ</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Especialidade</th>
+                    <th>Data de Criação</th>
+                    <th>Data de Atualização</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>

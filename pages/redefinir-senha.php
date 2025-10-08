@@ -46,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token_valido) {
         
         // Atualiza a senha na tabela correta (clientes, prestadores ou administradores)
         $tabela_atualizada = false;
-        foreach (['clientes', 'prestadores', 'administradores'] as $tabela) {
-            $stmt = $pdo->prepare("UPDATE $tabela SET senha = ? WHERE email = ?");
+        foreach (['Cliente', 'Prestador', 'Administrador'] as $tabela) {
+            $stmt = $pdo->prepare("UPDATE `$tabela` SET password = ? WHERE email = ?");
             if ($stmt->execute([$senhaHash, $email_usuario])) {
                 if ($stmt->rowCount() > 0) {
                     $tabela_atualizada = true;
