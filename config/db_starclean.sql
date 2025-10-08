@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 08/10/2025 às 02:51
+-- Tempo de geração: 08/10/2025 às 02:59
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `db_starclean`
 --
+CREATE SCHEMA IF NOT EXISTS `db_starClean` DEFAULT CHARACTER SET utf8 ;
+USE `db_starClean` ;
 
 -- --------------------------------------------------------
 
@@ -205,8 +207,8 @@ CREATE TABLE `servico` (
 --
 
 INSERT INTO `servico` (`id`, `titulo`, `descricao`, `preco`, `duracao_estimada`, `prestador_id`) VALUES
-(12, 'dsfg sd', 'sdfgsd', 111, NULL, 2),
-(13, 'dsfg sd', 'sdfgsd', 111, NULL, 2);
+(13, 'limpeza doméstica', 'limpeza doméstica geral', 150, NULL, 2),
+(14, 'passar', 'tesste', 50, NULL, 2);
 
 --
 -- Índices para tabelas despejadas
@@ -340,7 +342,7 @@ ALTER TABLE `prestador`
 -- AUTO_INCREMENT de tabela `servico`
 --
 ALTER TABLE `servico`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restrições para tabelas despejadas

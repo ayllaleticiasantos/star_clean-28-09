@@ -6,4 +6,4 @@ define("DB_PASS", "");
 define("DB_CHARSET", "utf8mb4");
 
 // CORRIGIDO O CAMINHO BASE
-define("BASE_URL", "http://localhost/projetos/Star_clean2.0/star_clean-28-09-main");
+define("BASE_URL", "http://localhost/star_clean");
