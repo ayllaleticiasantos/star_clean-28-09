@@ -13,10 +13,10 @@
                     <a class="nav-link active" href="<?= BASE_URL ?>/index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Sobre Nós</a>
+                    <a class="nav-link" href="<?= BASE_URL ?>/pages/sobre.php">Sobre Nós</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Avaliações</a>
+                    <a class="nav-link" href="<?= BASE_URL ?>/pages/avaliacoes.php">Avaliações</a>
                 </li>
             </ul>
 

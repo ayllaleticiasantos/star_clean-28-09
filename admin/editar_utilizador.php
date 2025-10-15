@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $pdo = obterConexaoPDO();
-        $stmt = $pdo->prepare("UPDATE `$tabela` SET nome = ?, email = ?, password = ? WHERE id = ?");
-        $stmt->execute([$nome, $email, $senha, $id]);
+        $stmt = $pdo->prepare("UPDATE `$tabela` SET nome = ?, sobrenome = ?, email = ?, data_nascimento = ?, telefone = ?, password = ? WHERE id = ?");
+        $stmt->execute([$nome, $sobrenome, $email, $data_nascimento, $telefone, $senha, $id]);
 
         $_SESSION['mensagem_sucesso'] = "Utilizador atualizado com sucesso!";
         header("Location: gerir_utilizadores.php");
@@ -48,11 +48,11 @@ if (isset($_GET['id']) && isset($_GET['tipo'])) {
         
         // Use os nomes de coluna corretos para cada tipo de tabela
         if ($tipo === 'cliente') {
-            $stmt = $pdo->prepare("SELECT id, nome, sobrenome, email FROM `$tabela` WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT id, nome, sobrenome, email, data_nascimento, telefone FROM `$tabela` WHERE id = ?");
             $stmt->execute([$id]);
             $utilizador = $stmt->fetch();
         } elseif ($tipo === 'prestador') {
-            $stmt = $pdo->prepare("SELECT id, nome_razão_social, sobrenome_nome_fantasia, email FROM `$tabela` WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT id, nome_razão_social, cpf_cnpj,sobrenome_nome_fantasia,email, telefone, especialidade, descricao FROM `$tabela` WHERE id = ?");
             $stmt->execute([$id]);
             $utilizador = $stmt->fetch();
             
