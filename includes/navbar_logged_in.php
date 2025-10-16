@@ -28,6 +28,7 @@ if (isset($_SESSION['usuario_id'])) {
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
     <div class="container-fluid">
+        
        <a class="navbar-brand" href="<?= BASE_URL ?>/index.php"><b></b>
         <i class="bi bi-star fs-3 me-2 bg-circle p-2 text-dark">StarClean</i></a>
 

@@ -54,7 +54,9 @@ include '../includes/navbar_logged_in.php';
         </ul>
     </div>
 </div>
-
+<?
+include '../includes/menu.php';
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 bg-white p-3 d-none d-md-block" style="min-height: 100vh;">
