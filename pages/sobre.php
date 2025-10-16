@@ -13,20 +13,6 @@ include '../includes/navbar.php';
             residências.</p>
     </div>
 </header>
-<!-- 
-<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="..." class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="..." class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="..." class="d-block w-100" alt="...">
-        </div>
-    </div>
-</div> -->
 
 <main class="container my-5">
 
@@ -77,8 +63,8 @@ include '../includes/navbar.php';
         <div class="container">
             <div class="row text-center mb-5">
                 <div class="col-lg-8 mx-auto">
-                    <h2 class="display-6">Nossas Lideranças</h2>
-                    <p class="lead">Conheça as profissionais que guiam a Star Clean ao sucesso.</p>
+                    <h2 class="display-6">Nossa Liderança</h2>
+                    <p class="lead">Conheça as profissionais que guiam a StarClean ao sucesso.</p>
                 </div>
             </div>
 
@@ -90,8 +76,8 @@ include '../includes/navbar.php';
                                 class="rounded-circle team-member mb-3"> -->
                             <h4 class="mb-1">Gislene Aparecida Oliveira da Silva</h4>
                             <h6 class="text-primary mb-3">Diretora e Advogada</h6>
-                            <p class="text-muted">Graduada em Direito, Técnica em Logística e cursando Técnico em
-                                Administração. Responsável pela direção da empresa, visão estratégica, relacionamento
+                            <p class="text-muted">Graduada em Direito, Técnica em Logística e Técnica em Administração e cursando Técnico em
+                                Informática. Responsável pela direção da empresa, visão estratégica, relacionamento
                                 com clientes e fornecedores, além da área jurídica.</p>
                         </div>
                     </div>

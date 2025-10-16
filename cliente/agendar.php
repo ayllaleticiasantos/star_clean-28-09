@@ -7,7 +7,11 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'cliente') 
     header("Location: ../pages/login.php");
     exit();
 }
-
+// Validar o servico_id
+if (isset($_GET['servico_id']) && is_numeric($_GET['servico_id'])) {
+    $servico_id = $_GET['servico_id'];
+    // Restante do código
+}
 $mensagem = '';
 $servico = null;
 $endereco_cliente = null; 
