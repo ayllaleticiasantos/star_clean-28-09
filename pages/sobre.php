@@ -6,7 +6,7 @@ include '../includes/navbar.php';
 
 ?>
 
-<header class="hero-section" style="background: url(../img/sliderbarcliente.jpg) center/cover no-repeat; height: 400px; display: flex; align-items: center; color: black; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">
+<header class="hero-section" style="background: url(../img/Logo_slider.jpg) center/cover no-repeat; height: 400px; display: flex; align-items: center; color: black; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">
     <div class="container">
         <h1 class="display-4 fw-bold">Conheça a Star Clean</h1>
         <p class="lead">Eficiência e eficácia na prestação de serviços de limpeza para empresas, escritórios e
@@ -60,10 +60,12 @@ include '../includes/navbar.php';
                         <i class="bi bi-gem fs-1 text-primary"></i>
                         <h3 class="card-title mt-3">Valores</h3>
                         <ul class="list-unstyled align-center">
-                            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Ética e Integridade</li>
-                            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Profissionalismo</li>
-                            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Transparência</li>
-                            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Pontualidade e Eficiência</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Ética</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Integridade</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Profissionalismo</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Transparência</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Pontualidade</li>
+                            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Eficiência</li>
                         </ul>
                     </div>
                 </div>

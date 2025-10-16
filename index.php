@@ -14,7 +14,7 @@ include 'includes/navbar.php';
         </div>
         <div class="carousel-inner h-2">
             <div class="carousel-item active">
-                <img src="img/sliderbarprest.jpg " class="d-block w-100 h-100 object-fit-cover" alt="Seja um Prestador de Serviços">
+                <img src="img/prestadoresSliderbar.jpg " class="d-block w-100 h-100 object-fit-cover" alt="Seja um Prestador de Serviços">
                 <div class="carousel-caption d-none d-md-block">
                     <h2>Seja um Prestador de Serviços</h2>
                     <p>Junte-se a nós e ofereça seus serviços de limpeza.</p>

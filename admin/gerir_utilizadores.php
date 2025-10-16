@@ -3,7 +3,7 @@ session_start();
 require_once '../config/db.php';
 
 // 1. LÓGICA PHP DA PÁGINA
-// Segurança: Apenas administradores podem aceder a esta página
+// Segurança: Apenas administradores podem acessar a esta página
 if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'admin') {
     header("Location: ../pages/login.php");
     exit();
@@ -38,9 +38,6 @@ try {
 include '../includes/header.php';
 include '../includes/navbar_logged_in.php';
 
-// =========================================================================
-// 3. ESTRUTURA DA SIDEBAR RESPONSIVA (SUBSTITUI O ANTIGO INCLUDE)
-// =========================================================================
 ?>
 
 <button class="btn btn-primary d-md-none m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
