@@ -2,53 +2,58 @@
 session_start();
 require_once '../config/db.php';
 
-// Segurança: Apenas administradores podem aceder
+// Segurança: Apenas administradores podem acessar
 if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'admin') {
     header("Location: ../pages/login.php");
     exit();
 }
 
 $pdo = obterConexaoPDO();
+$mensagem_erro = '';
+$mensagem_sucesso = '';
 
 // --- 1. LÓGICA DE ATUALIZAÇÃO (QUANDO O FORMULÁRIO É ENVIADO VIA POST) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-    // Validação básica dos campos recebidos
-    if (isset($_POST['id'], $_POST['tipo'], $_POST['nome'], $_POST['email'])) {
-        $id = $_POST['id'];
-        $tipo = $_POST['tipo'];
-        $nome = trim($_POST['nome']);
-        $email = trim($_POST['email']);
+    $id = $_POST['id'] ?? null;
+    $tipo = $_POST['tipo'] ?? null;
 
+    if ($id && $tipo) {
         try {
-            // Lógica segura para ATUALIZAR os dados com base no tipo
             if ($tipo === 'cliente') {
-                $stmt = $pdo->prepare("UPDATE Cliente SET nome = ?, email = ? WHERE id = ?");
-                $stmt->execute([$nome, $email, $id]);
+                // Coleta todos os dados do formulário de cliente
+                $nome = trim($_POST['nome']);
+                $sobrenome = trim($_POST['sobrenome']);
+                $email = trim($_POST['email']);
+                $telefone = trim($_POST['telefone']);
+                $cpf = trim($_POST['cpf']);
+                $data_nascimento = trim($_POST['data_nascimento']);
+                
+                $stmt = $pdo->prepare("UPDATE cliente SET nome = ?, sobrenome = ?, email = ?, telefone = ?, cpf = ?, data_nascimento = ? WHERE id = ?");
+                $stmt->execute([$nome, $sobrenome, $email, $telefone, $cpf, $data_nascimento, $id]);
+
             } elseif ($tipo === 'prestador') {
-                $stmt = $pdo->prepare("UPDATE Prestador SET nome_razão_social = ?, email = ? WHERE id = ?");
-                $stmt->execute([$nome, $email, $id]);
-            } else {
-                // Se o tipo for inválido, define uma mensagem de erro
-                $_SESSION['mensagem_erro'] = "Tipo de utilizador inválido.";
-                header("Location: gerir_utilizadores.php");
-                exit();
+                // Coleta todos os dados do formulário de prestador
+                $nome_razao_social = trim($_POST['nome_razão_social']);
+                $sobrenome_nome_fantasia = trim($_POST['sobrenome_nome_fantasia']);
+                $email = trim($_POST['email']);
+                $telefone = trim($_POST['telefone']);
+                $cpf_cnpj = trim($_POST['cpf_cnpj']);
+                $especialidade = trim($_POST['especialidade']);
+
+                $stmt = $pdo->prepare("UPDATE prestador SET nome_razão_social = ?, sobrenome_nome_fantasia = ?, email = ?, telefone = ?, cpf_cnpj = ?, especialidade = ? WHERE id = ?");
+                $stmt->execute([$nome_razao_social, $sobrenome_nome_fantasia, $email, $telefone, $cpf_cnpj, $especialidade, $id]);
             }
 
-            // Se a atualização for bem-sucedida
             $_SESSION['mensagem_sucesso'] = "Utilizador atualizado com sucesso!";
             header("Location: gerir_utilizadores.php");
             exit();
 
         } catch (PDOException $e) {
-            // Em caso de erro na base de dados (ex: e-mail duplicado)
-            $_SESSION['mensagem_erro'] = "Erro ao atualizar o utilizador. Verifique se o e-mail já existe.";
-            // Para depuração: error_log("Erro ao atualizar utilizador: " . $e->getMessage());
+            $_SESSION['mensagem_erro'] = "Erro ao atualizar o utilizador. Verifique se o e-mail, CPF ou CNPJ já existem.";
             header("Location: gerir_utilizadores.php");
             exit();
         }
     } else {
-        // Se os campos obrigatórios não forem enviados
         $_SESSION['mensagem_erro'] = "Dados insuficientes para atualizar.";
         header("Location: gerir_utilizadores.php");
         exit();
@@ -62,28 +67,17 @@ if (isset($_GET['id']) && isset($_GET['tipo'])) {
     $id = $_GET['id'];
     $tipo = $_GET['tipo'];
     
-    $tabela = ($tipo === 'cliente') ? 'Cliente' : (($tipo === 'prestador') ? 'Prestador' : null);
-
-    if (!$tabela) {
-        die("Tipo de utilizador inválido.");
-    }
-
     try {
         if ($tipo === 'cliente') {
-            $stmt = $pdo->prepare("SELECT id, nome, sobrenome, email, data_nascimento, telefone FROM Cliente WHERE id = ?");
-            $stmt->execute([$id]);
-            $utilizador = $stmt->fetch();
+            $stmt = $pdo->prepare("SELECT * FROM cliente WHERE id = ?");
         } elseif ($tipo === 'prestador') {
-            $stmt = $pdo->prepare("SELECT id, nome_razão_social, sobrenome_nome_fantasia, email FROM Prestador WHERE id = ?");
-            $stmt->execute([$id]);
-            $utilizador = $stmt->fetch();
-            
-            // Renomeia as chaves para corresponderem ao formulário de forma consistente
-            if ($utilizador) {
-                $utilizador['nome'] = $utilizador['nome_razão_social'];
-                $utilizador['sobrenome'] = $utilizador['sobrenome_nome_fantasia'];
-            }
+            $stmt = $pdo->prepare("SELECT * FROM prestador WHERE id = ?");
+        } else {
+            die("Tipo de utilizador inválido.");
         }
+        $stmt->execute([$id]);
+        $utilizador = $stmt->fetch();
+
     } catch (PDOException $e) {
         die("Erro ao buscar dados do utilizador: " . $e->getMessage());
     }
@@ -97,35 +91,89 @@ if (isset($_GET['id']) && isset($_GET['tipo'])) {
 
 // --- 3. HTML DA PÁGINA ---
 include '../includes/header.php';
-include '../includes/navbar_logged_in.php';
+include '../includes/navbar_logged_in.php';   
 include '../includes/sidebar.php';
 ?>
 
-<div class="container-fluid p-4">
-    <h1 class="mb-4">Editar Utilizador</h1>
+<!-- O conteúdo começa aqui -->
+<h1 class="mb-4">Editar Utilizador</h1>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title">A editar: <?= htmlspecialchars($utilizador['nome']) ?></h5>
-            
-            <form action="editar_utilizador.php" method="post">
-                <input type="hidden" name="id" value="<?= htmlspecialchars($utilizador['id']) ?>">
-                <input type="hidden" name="tipo" value="<?= htmlspecialchars($tipo) ?>">
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h5 class="mb-0">A editar: <?= htmlspecialchars($tipo === 'cliente' ? $utilizador['nome'] . ' ' . $utilizador['sobrenome'] : $utilizador['nome_razão_social']) ?></h5>
+    </div>
+    <div class="card-body">
+        <form action="editar_utilizador.php" method="post">
+            <input type="hidden" name="id" value="<?= htmlspecialchars($utilizador['id']) ?>">
+            <input type="hidden" name="tipo" value="<?= htmlspecialchars($tipo) ?>">
 
-                <div class="mb-3">
-                    <label for="nome" class="form-label"><?= ($tipo === 'prestador') ? 'Nome / Razão Social:' : 'Nome:' ?></label>
-                    <input type="text" class="form-control" id="nome" placeholder="Digite o nome" name="nome" value="<?= htmlspecialchars($utilizador['nome']) ?>" required>
+            <?php if ($tipo === 'cliente'): ?>
+                <!-- FORMULÁRIO PARA CLIENTE -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="nome" class="form-label">Nome:</label>
+                        <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($utilizador['nome']) ?>" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="sobrenome" class="form-label">Sobrenome:</label>
+                        <input type="text" class="form-control" id="sobrenome" name="sobrenome" value="<?= htmlspecialchars($utilizador['sobrenome']) ?>" required>
+                    </div>
                 </div>
-
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
-                    <input type="email" class="form-control" id="email" placeholder="Digite o email" name="email" value="<?= htmlspecialchars($utilizador['email']) ?>" required>
+                    <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($utilizador['email']) ?>" required>
                 </div>
-                
-                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                <a href="gerir_utilizadores.php" class="btn btn-secondary">Cancelar</a>
-            </form>
-        </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="telefone" class="form-label">Telefone:</label>
+                        <input type="tel" class="form-control" id="telefone" name="telefone" value="<?= htmlspecialchars($utilizador['telefone']) ?>">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="cpf" class="form-label">CPF:</label>
+                        <input type="text" class="form-control" id="cpf" name="cpf" value="<?= htmlspecialchars($utilizador['cpf']) ?>" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="data_nascimento" class="form-label">Data de Nascimento:</label>
+                    <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="<?= htmlspecialchars($utilizador['data_nascimento']) ?>" required>
+                </div>
+
+            <?php elseif ($tipo === 'prestador'): ?>
+                <!-- FORMULÁRIO PARA PRESTADOR -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="nome_razão_social" class="form-label">Nome / Razão Social:</label>
+                        <input type="text" class="form-control" id="nome_razão_social" name="nome_razão_social" value="<?= htmlspecialchars($utilizador['nome_razão_social']) ?>" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="sobrenome_nome_fantasia" class="form-label">Sobrenome / Nome Fantasia:</label>
+                        <input type="text" class="form-control" id="sobrenome_nome_fantasia" name="sobrenome_nome_fantasia" value="<?= htmlspecialchars($utilizador['sobrenome_nome_fantasia']) ?>">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($utilizador['email']) ?>" required>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="telefone" class="form-label">Telefone:</label>
+                        <input type="tel" class="form-control" id="telefone" name="telefone" value="<?= htmlspecialchars($utilizador['telefone']) ?>">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="cpf_cnpj" class="form-label">CPF / CNPJ:</label>
+                        <input type="text" class="form-control" id="cpf_cnpj" name="cpf_cnpj" value="<?= htmlspecialchars($utilizador['cpf_cnpj']) ?>" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="especialidade" class="form-label">Especialidade:</label>
+                    <input type="text" class="form-control" id="especialidade" name="especialidade" value="<?= htmlspecialchars($utilizador['especialidade']) ?>" required>
+                </div>
+            <?php endif; ?>
+            
+            <hr>
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            <a href="gerir_utilizadores.php" class="btn btn-secondary">Cancelar</a>
+        </form>
     </div>
 </div>
 

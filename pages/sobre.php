@@ -1,12 +1,12 @@
 <?php
 
-include('../config/config.php');
+include '../config/config.php';
 include '../includes/header.php';
 include '../includes/navbar.php';
 
 ?>
 
-<header class="hero-section" style="background: url(../img/Logo_slider.jpg) center/cover no-repeat; height: 400px; display: flex; align-items: center; color: black; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">
+<header class="hero-section" style="background: url(../img/Logo_slider.jpg) center/cover no-repeat; height: 400px; display: flex; align-items: ; color: black; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">
     <div class="container">
         <h1 class="display-4 fw-bold">Conheça a StarClean</h1>
         <p class="lead">Eficiência na prestação de serviços de limpeza para empresas, escritórios e

@@ -70,9 +70,9 @@ include '../includes/sidebar.php';
                 <label for="tipo" class="form-label">Tipo:</label>
                 <select class="form-select" name="tipo" id="tipo" required>
                     <option value="">Selecione o tipo</option>
-                    <option value="admin">Administrador Geral</option>
-                    <option value="user">Administrador Usuário</option>
-                    <option value="moderator">Administrador Moderador</option>
+                    <option value="adminmaster">Administrador Geral</option>
+                    <option value="adminusuario">Administrador Usuário</option>
+                    <option value="adminmoderador">Administrador Moderador</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary w-100">Cadastrar</button>

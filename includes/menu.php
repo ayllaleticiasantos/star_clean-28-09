@@ -6,7 +6,7 @@ if (!defined('BASE_URL')) {
 $tipo_usuario = $_SESSION['usuario_tipo'] ?? '';
 ?>
 
-<ul class="nav flex-column mt-2">
+<ul class="nav flex-column mt-2h100">
     <?php // Menu para Admin ?>
     <?php if ($tipo_usuario === 'admin'): ?>
         <li class="nav-item">

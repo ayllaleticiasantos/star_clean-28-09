@@ -94,27 +94,36 @@ include '../includes/menu.php';
             <p>Este é o seu painel de controle. A partir daqui, você poderá gerir todas as funcionalidades do sistema.</p>
             <p>O seu tipo de utilizador é: <strong><?= htmlspecialchars($_SESSION['usuario_tipo']) ?></strong>.</p>
 
-            <div class="row mt-4">
-                <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm border-primary"><div class="card-body"><h5 class="card-title text-primary">Total de Clientes</h5><h2 class="card-text display-4"><?= $counts['clientes'] ?></h2></div></div>
-                </div>
-                <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm border-success"><div class="card-body"><h5 class="card-title text-success">Total de Prestadores</h5><h2 class="card-text display-4"><?= $counts['prestadores'] ?></h2></div></div>
-                </div>
-                <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm border-info"><div class="card-body"><h5 class="card-title text-info">Total de Agendamentos</h5><h2 class="card-text display-4"><?= $counts['agendamentos'] ?></h2></div></div>
-                </div>
-            </div>
+            
             
             <div class="row mt-4">
                 <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm border-0"><div class="card-body text-center"><i class="fas fa-users fa-3x text-primary mb-3"></i><h5 class="card-title">Gerir Utilizadores</h5><p class="card-text">Gerir clientes e prestadores de serviço.</p><a href="gerir_utilizadores.php" class="btn btn-primary">Acessar</a></div></div>
+                    <div class="card h-100 shadow-sm border-primary"><div class="card-body text-center"><i class="fas fa-users fa-3x text-primary mb-3"></i><h5 class="card-title">Gerir Utilizadores</h5><p class="card-text">Gerir clientes e prestadores de serviço.</p><a href="gerir_utilizadores.php" class="btn btn-primary">Acessar</a></div></div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm border-0"><div class="card-body text-center"><i class="fas fa-calendar-check fa-3x text-success mb-3"></i><h5 class="card-title">Gerir Agendamentos</h5><p class="card-text">Ver e gerir todos os agendamentos.</p><a href="gerir_agendamentos.php" class="btn btn-success">Acessar</a></div></div>
+                    <div class="card h-100 shadow-sm border-success"><div class="card-body text-center"><i class="fas fa-calendar-check fa-3x text-success mb-3"></i><h5 class="card-title">Gerir Agendamentos</h5><p class="card-text">Ver e gerir todos os agendamentos.</p><a href="gerir_agendamentos.php" class="btn btn-success">Acessar</a></div></div>
                 </div>
                 <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm border-0"><div class="card-body text-center"><i class=" fa-3x bi bi-plus-square-fill text-info mb-3"></i><h5 class="card-title">Cadastrar Administrador</h5><p class="card-text">Adicione um novo administrador.</p><a href="cadastraraadm.php" class="btn btn-info">Cadastrar Agora</a></div></div>
+                    <div class="card h-100 shadow-sm border-info"><div class="card-body text-center"><i class=" fa-3x bi bi-plus-square-fill text-info mb-3"></i><h5 class="card-title">Cadastrar Administrador</h5><p class="card-text">Adicione um novo administrador.</p><a href="cadastraraadm.php" class="btn btn-info">Cadastrar Agora</a></div></div>
+                </div>
+                
+            </div>
+
+             <div class="row mt-4">
+                <div class="col-12 col-sm-6 col-lg-4 mb-4 align-self-stretch">
+                    <div class="card h-100 shadow-sm border-primary text-center"><div class="card-body"><h2 class="card-title text-primary">Total de Clientes</h2><h2 class="card-text display-4"><?= $counts['clientes'] ?></h2>
+                <p><h4>Clientes registados no sistema.</h4></p>
+                </div></div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 mb-4 align-self-stretch">
+                    <div class="card h-100 shadow-sm border-success text-center"><div class="card-body"><h2 class="card-title text-success">Total de Prestadores</h2><h2 class="card-text display-4"><?= $counts['prestadores'] ?></h2>
+                <p><h4>Prestadores registados no sistema.</h4></p>
+                </div></div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4 mb-4 align-self-stretch">
+                    <div class="card h-100 shadow-sm border-info text-center"><div class="card-body"><h2 class="card-title text-info">Total de Agendamentos</h2><h2 class="card-text display-4"><?= $counts['agendamentos'] ?></h2>
+                <p><h4>Agendamentos registados no sistema.</h4></p>
+                </div></div>
                 </div>
             </div>
         </div> </div> </div> <?php
