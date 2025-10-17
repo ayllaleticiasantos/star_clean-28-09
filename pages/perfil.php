@@ -91,7 +91,7 @@ include '../includes/header.php';
 include '../includes/navbar_logged_in.php';
 ?>
 
-<div class="container mt-5" style="max-width: 800px;">
+<div class="container mt-5" style="max-width: 800px; padding: botton 20px;">
     <h1>Meu Perfil</h1>
     <hr>
 
@@ -106,7 +106,7 @@ include '../includes/navbar_logged_in.php';
     }
     ?>
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm mb-5">
         <div class="card-header">
             <h5>Dados Pessoais</h5>
         </div>
@@ -125,7 +125,7 @@ include '../includes/navbar_logged_in.php';
         </div>
     </div>
 
-    <div class="card shadow-sm">
+    <div class="card shadow-sm mb-5">
         <div class="card-header">
             <h5>Alterar Senha</h5>
         </div>

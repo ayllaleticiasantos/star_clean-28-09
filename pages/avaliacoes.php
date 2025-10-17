@@ -6,7 +6,7 @@ include '../includes/navbar.php';
 
 ?>
 
-<header class="hero-section" style="background: url(../img/Logo_slider.jpg) center/cover no-repeat; height: 400px; display: flex; align-items: center; color: black; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">
+<header class="hero-section" style="background: url(../img/header-limpeza.jpeg) center/cover no-repeat; height: 400px; display: flex; align-items: center; color: black; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">
     <div class="container">
         <h1 class="display-4 fw-bold">Avaliações</h1>
         <p class="lead">Veja o que nossos clientes estão dizendo sobre nós.</p>
