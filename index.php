@@ -17,8 +17,8 @@ include 'includes/navbar.php';
                 <img src="img/sliderbar_1.png" class="d-block w-100" style="max-height: 500px; object-fit: cover;"
                     alt="Seja bem-vindo à StarClean">
                 <div class="carousel-caption d-none d-md-block">
-                    <h2 class="display-3 fw-bold text-black align-self-center">Bem-vindos à StarClean</h2>
-                    <p class="lead col-lg-8 mx-auto text-black">A sua plataforma para agendar serviços de limpeza com qualidade e
+                    <h2 class="display-3 fw-bold text-white align-self-center">Bem-vindos à StarClean</h2>
+                    <p class="lead col-lg-8 mx-auto text-white">A sua plataforma para agendar serviços de limpeza com qualidade e
                         confiança.</p>
                 </div>
             </div>
@@ -26,8 +26,8 @@ include 'includes/navbar.php';
                 <img src="img/sliderbar_1.png" class="d-block w-100" style="max-height: 500px; object-fit: cover;"
                     alt="Seja um Cliente">
                 <div class="carousel-caption d-none d-md-block">
-                    <h2 style="color: black; text-shadow: 1px 1px 2px white;">Seja um dos nossos Clientes</h2>
-                    <p style="color: black; text-shadow: 1px 1px 2px white;">Encontre os melhores prestadores de
+                    <h2 style="color: white; text-shadow: 1px 1px 2px black;">Seja um dos nossos Clientes</h2>
+                    <p style="color: white; text-shadow: 1px 1px 2px black  ;">Encontre os melhores prestadores de
                         serviços de limpeza.</p>
                     <a href="pages/cadastro.php" class="btn btn-primary">Cadastre-se</a>
                 </div>
@@ -36,8 +36,8 @@ include 'includes/navbar.php';
                 <img src="img/sliderbar_1.png" class="d-block w-100" style="max-height: 500px; object-fit: cover;"
                     alt="Seja um Prestador de Serviços">
                 <div class="carousel-caption d-none d-md-block">
-                    <h2>Seja um Prestador de Serviços</h2>
-                    <p>Junte-se a nós e ofereça seus serviços de limpeza.</p>
+                    <h2 style="color: white; text-shadow: 1px 1px 2px black;">Seja um Prestador de Serviços</h2>
+                    <p style="color: white; text-shadow: 1px 1px 2px black;">Junte-se a nós e ofereça seus serviços de limpeza.</p>
                     <a href="pages/cadastro.php" class="btn btn-primary">Cadastre-se</a>
                 </div>
             </div>

@@ -2,7 +2,7 @@
 session_start();
 require_once '../config/db.php';
 
-// Segurança: Apenas clientes podem aceder a esta página
+// Segurança: Apenas clientes podem acessar a esta página
 if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'cliente') {
     header("Location: ../pages/login.php");
     exit();
