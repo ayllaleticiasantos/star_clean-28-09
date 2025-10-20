@@ -129,7 +129,7 @@ include '../includes/navbar.php';
             </div>
 
             <div id="camposCliente">
-                <div class="mb-3"><label for="cliente_nome" class="form-label">Nome Completo:</label><input type="text"
+                <div class="mb-3"><label for="cliente_nome" class="form-label">Nome:</label><input type="text"
                         class="form-control" name="cliente_nome" id="cliente_nome"
                         placeholder="Digite seu nome completo"></div>
                 <div class="mb-3"><label for="cliente_sobrenome" class="form-label">Sobrenome:</label><input type="text"
@@ -151,7 +151,7 @@ include '../includes/navbar.php';
 
             <div id="camposPrestador" style="display: none;">
                 <div class="mb-3"><label for="prestador_nome_razao" class="form-label"
-                        placeholder="Dígite Seu Nome ou Razão Social">Nome Completo / Razão Social:</label><input
+                        placeholder="Dígite Seu Nome ou Razão Social">Nome / Razão Social:</label><input
                         type="text" class="form-control" name="prestador_nome_razao" id="prestador_nome_razao" placeholder="Dígite Seu Nome ou Razão Social"></div>
                 <div class="mb-3"><label for="prestador_sobrenome_fantasia" class="form-label"
                         placeholder="Digite Seu Sobrenome ou Nome Fantasia">Sobrenome / Nome Fantasia:</label><input
