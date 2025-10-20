@@ -20,6 +20,8 @@ $bairro = $_POST['bairro'] ?? '';
 $cidade = $_POST['cidade'] ?? '';
 $uf = $_POST['uf'] ?? '';
 
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Pega os valores do POST e remove espaços extras
     $cep = trim($_POST['cep']);
@@ -90,7 +92,7 @@ include '../includes/navbar_logged_in.php';
     <?php include '../includes/sidebar.php'; ?>
 
     <div class="container-fluid p-4">
-        <h1 class="mb-4">Adicionar Novo Endereço</h1>
+        <h1 class="mb-4">Adicionar Endereço</h1>
         <hr>
 
         <?php if (!empty($mensagem)) { echo $mensagem; } ?>
