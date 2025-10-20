@@ -20,8 +20,6 @@ $bairro = $_POST['bairro'] ?? '';
 $cidade = $_POST['cidade'] ?? '';
 $uf = $_POST['uf'] ?? '';
 
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Pega os valores do POST e remove espaços extras
     $cep = trim($_POST['cep']);
