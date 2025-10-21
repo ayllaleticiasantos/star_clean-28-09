@@ -7,19 +7,21 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'cliente') 
     header("Location: ../pages/login.php");
     exit();
 }
-// Validar o servico_id
-if (isset($_GET['servico_id']) && is_numeric($_GET['servico_id'])) {
-    $servico_id = $_GET['servico_id'];
-    // Restante do código
-}
+
 $mensagem = '';
 $servico = null;
-$endereco_cliente = null; 
+$enderecos_cliente = []; // Renomeado para plural, pois pode ter vários
+$id_cliente = $_SESSION['usuario_id'];
 
-if (isset($_GET['servico_id'])) {
+// Valida o servico_id
+if (!isset($_GET['servico_id']) || !is_numeric($_GET['servico_id'])) {
+    $mensagem = '<div class="alert alert-danger">ID do serviço não fornecido ou inválido.</div>';
+} else {
     $servico_id = $_GET['servico_id'];
     try {
         $pdo = obterConexaoPDO();
+        
+        // 1. Buscar detalhes do Serviço e do Prestador
         $stmt = $pdo->prepare(
             "SELECT s.id, s.titulo, s.descricao, s.preco, s.prestador_id, p.nome_razão_social AS nome_prestador
              FROM Servico s
@@ -32,47 +34,53 @@ if (isset($_GET['servico_id'])) {
         if (!$servico) {
             $mensagem = '<div class="alert alert-danger">Serviço não encontrado.</div>';
         }
-        
-        $stmt_endereco = $pdo->prepare("SELECT id FROM Endereco WHERE Cliente_id = ? LIMIT 1");
-        $stmt_endereco->execute([$_SESSION['usuario_id']]);
-        $endereco_cliente = $stmt_endereco->fetch(PDO::FETCH_ASSOC);
 
-        if (!$endereco_cliente) {
-            $_SESSION['mensagem_erro'] = "Nenhum endereço encontrado. Por favor, adicione um endereço para agendar.";
+        // 2. Buscar todos os Endereços do Cliente Logado
+        $stmt_endereco = $pdo->prepare("SELECT id, logradouro, numero, bairro, cidade, uf FROM Endereco WHERE Cliente_id = ?");
+        $stmt_endereco->execute([$id_cliente]);
+        $enderecos_cliente = $stmt_endereco->fetchAll(PDO::FETCH_ASSOC);
+
+        // Se nenhum endereço for encontrado, redireciona o cliente
+        if (empty($enderecos_cliente)) {
+            $_SESSION['mensagem_erro'] = "Nenhum endereço cadastrado. Por favor, adicione um endereço para agendar.";
             header("Location: gerir_enderecos.php");
             exit();
         }
 
     } catch (PDOException $e) {
-        $mensagem = '<div class="alert alert-danger">Ocorreu um erro ao buscar os detalhes do serviço.</div>';
+        $mensagem = '<div class="alert alert-danger">Ocorreu um erro ao buscar dados essenciais.</div>';
+        error_log("Erro em agendar.php: " . $e->getMessage());
     }
-} else {
-    $mensagem = '<div class="alert alert-danger">ID do serviço não fornecido.</div>';
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $servico && $endereco_cliente) {
-    $cliente_id = $_SESSION['usuario_id'];
+
+// --- LÓGICA DE PROCESSAMENTO DO AGENDAMENTO (POST) ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $servico && !empty($enderecos_cliente)) {
     $prestador_id = $servico['prestador_id'];
+    $endereco_id = $_POST['endereco_id'] ?? null; // Novo campo
     $data = $_POST['data'];
     $hora = $_POST['hora'];
     $observacoes = $_POST['observacoes'];
     $status = 'pendente';
     
-    $endereco_id = $endereco_cliente['id'];
+    if (empty($endereco_id)) {
+        $mensagem = '<div class="alert alert-danger">Por favor, selecione um endereço para o serviço.</div>';
+    } else {
+        try {
+            $pdo = obterConexaoPDO();
+            $stmt = $pdo->prepare(
+                "INSERT INTO Agendamento (Cliente_id, Prestador_id, Servico_id, Endereco_id, data_agendamento, hora_agendamento, status, observacoes)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+            $stmt->execute([$id_cliente, $prestador_id, $servico['id'], $endereco_id, $data, $hora, $status, $observacoes]);
 
-    try {
-        $pdo = obterConexaoPDO();
-        $stmt = $pdo->prepare(
-            "INSERT INTO Agendamento (Cliente_id, Prestador_id, Servico_id, Endereco_id, data, hora, status, observacoes)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        );
-        $stmt->execute([$cliente_id, $prestador_id, $servico['id'], $endereco_id, $data, $hora, $status, $observacoes]);
-
-        $_SESSION['mensagem_sucesso'] = "Agendamento solicitado com sucesso! Aguarde a confirmação do prestador.";
-        header("Location: meus_agendamentos.php");
-        exit();
-    } catch (PDOException $e) {
-        $mensagem = '<div class="alert alert-danger">Erro ao solicitar o agendamento. ' . $e->getMessage() . '</div>';
+            $_SESSION['mensagem_sucesso'] = "Agendamento solicitado com sucesso! Aguarde a confirmação do prestador.";
+            header("Location: meus_agendamentos.php");
+            exit();
+        } catch (PDOException $e) {
+            $mensagem = '<div class="alert alert-danger">Erro ao solicitar o agendamento. Verifique se a data e hora são válidas.</div>';
+            error_log($e->getMessage());
+        }
     }
 }
 
@@ -89,7 +97,7 @@ include '../includes/navbar_logged_in.php';
 
         <?= $mensagem ?>
 
-        <?php if ($servico && $endereco_cliente): ?>
+        <?php if ($servico && !empty($enderecos_cliente)): ?>
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <h5 class="card-title"><?= htmlspecialchars($servico['titulo']) ?></h5>
@@ -105,6 +113,19 @@ include '../includes/navbar_logged_in.php';
                 </div>
                 <div class="card-body">
                     <form action="agendar.php?servico_id=<?= htmlspecialchars($servico['id']) ?>" method="post">
+                        
+                        <div class="mb-3">
+                            <label for="endereco_id" class="form-label">Selecione o Endereço:</label>
+                            <select class="form-select" id="endereco_id" name="endereco_id" required>
+                                <option value="">--- Selecione um Endereço ---</option>
+                                <?php foreach ($enderecos_cliente as $endereco): ?>
+                                    <option value="<?= htmlspecialchars($endereco['id']) ?>">
+                                        <?= htmlspecialchars($endereco['logradouro']) ?>, N° <?= htmlspecialchars($endereco['numero']) ?> - <?= htmlspecialchars($endereco['bairro']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
                         <div class="mb-3">
                             <label for="data" class="form-label">Data do Serviço:</label>
                             <input type="date" class="form-control" id="data" name="data" required>
@@ -122,6 +143,8 @@ include '../includes/navbar_logged_in.php';
                     </form>
                 </div>
             </div>
+        <?php else: ?>
+             <div class="alert alert-info">Não foi possível carregar os detalhes do serviço.</div>
         <?php endif; ?>
     </div>
 </main>

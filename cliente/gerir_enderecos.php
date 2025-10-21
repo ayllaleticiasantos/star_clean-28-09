@@ -43,7 +43,7 @@ include '../includes/navbar_logged_in.php';
             <h1>Gerir Endereços</h1>
             <a href="adicionar_endereco.php" class="btn btn-primary">Adicionar Novo Endereço</a>
         </div>
-        
+
         <?= $mensagem_sucesso ?>
         <?= $mensagem_erro ?>
 
@@ -72,7 +72,8 @@ include '../includes/navbar_logged_in.php';
                                         <td><?= htmlspecialchars($endereco['numero']) ?></td>
                                         <td>
                                             <a href="editar_endereco.php?id=<?= $endereco['id'] ?>" class="btn btn-sm btn-warning">Editar</a>
-                                            <a href="excluir_endereco.php?id=<?= $endereco['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem a certeza de que deseja excluir este endereço?');">Excluir</a>
+                                            <a href="excluir_endereco.php?id=<?= $endereco['id'] ?>" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Tem a certeza de que deseja excluir este endereço?');">Excluir</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

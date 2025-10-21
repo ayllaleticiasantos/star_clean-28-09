@@ -10,16 +10,48 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'cliente') 
 
 $mensagem = '';
 $id_cliente = $_SESSION['usuario_id'];
+$id_endereco = $_GET['id'] ?? null;
+$endereco_existente = null;
 
-// Inicializa as variáveis para manter os valores no formulário em caso de erro
-$cep = $_POST['cep'] ?? '';
-$logradouro = $_POST['logradouro'] ?? '';
-$numero = $_POST['numero'] ?? '';
-$complemento = $_POST['complemento'] ?? '';
-$bairro = $_POST['bairro'] ?? '';
-$cidade = $_POST['cidade'] ?? '';
-$uf = $_POST['uf'] ?? '';
+// Redireciona se o ID do endereço não foi fornecido
+if (empty($id_endereco) || !is_numeric($id_endereco)) {
+    $_SESSION['mensagem_erro'] = "ID do endereço inválido ou não fornecido.";
+    header("Location: gerir_enderecos.php");
+    exit();
+}
 
+try {
+    $pdo = obterConexaoPDO();
+    // 1. Lógica para buscar os dados do endereço existente
+    $stmt = $pdo->prepare("SELECT * FROM Endereco WHERE id = ? AND Cliente_id = ?");
+    $stmt->execute([$id_endereco, $id_cliente]);
+    $endereco_existente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Verifica se o endereço existe e pertence ao cliente logado
+    if (!$endereco_existente) {
+        $_SESSION['mensagem_erro'] = "Endereço não encontrado ou você não tem permissão para editá-lo.";
+        header("Location: gerir_enderecos.php");
+        exit();
+    }
+} catch (PDOException $e) {
+    error_log("Erro ao buscar endereço para edição: " . $e->getMessage());
+    $_SESSION['mensagem_erro'] = "Erro ao carregar dados do endereço.";
+    header("Location: gerir_enderecos.php");
+    exit();
+}
+
+
+// Inicializa as variáveis do formulário com os dados existentes
+$cep = $endereco_existente['cep'];
+$logradouro = $endereco_existente['logradouro'];
+$numero = $endereco_existente['numero'];
+$complemento = $endereco_existente['complemento'];
+$bairro = $endereco_existente['bairro'];
+$cidade = $endereco_existente['cidade'];
+$uf = $endereco_existente['uf'];
+
+
+// --- 2. LÓGICA DE ATUALIZAÇÃO (QUANDO O FORMULÁRIO É ENVIADO VIA POST) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Pega os valores do POST e remove espaços extras
     $cep = trim($_POST['cep']);
@@ -29,8 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $bairro = trim($_POST['bairro']);
     $cidade = trim($_POST['cidade']);
     $uf = trim($_POST['uf']);
-
-    // --- MELHORIA 1: VALIDAÇÃO NO LADO DO SERVIDOR ---
+    
+    // MELHORIA 1: VALIDAÇÃO NO LADO DO SERVIDOR (igual à da adição)
     $erros = [];
     if (empty($cep)) {
         $erros[] = "O campo CEP é obrigatório.";
@@ -62,23 +94,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mensagem .= "<li>" . htmlspecialchars($erro) . "</li>";
         }
         $mensagem .= '</ul></div>';
-    } else {
-        // Se não houver erros, prossiga com a inserção no banco
-        try {
-            $pdo = obterConexaoPDO();
-            $stmt = $pdo->prepare(
-                "INSERT INTO Endereco (Cliente_id, cep, logradouro, numero, complemento, bairro, cidade, uf)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-            );
-            $stmt->execute([$id_cliente, $cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf]);
+        
+        // Mantém a execução na página para mostrar o formulário com os erros
 
-            $_SESSION['mensagem_sucesso'] = "Endereço adicionado com sucesso!";
+    } else {
+        // Se não houver erros, prossiga com a ATUALIZAÇÃO no banco
+        try {
+            $stmt = $pdo->prepare(
+                "UPDATE Endereco SET cep = ?, logradouro = ?, numero = ?, complemento = ?, bairro = ?, cidade = ?, uf = ?
+                 WHERE id = ? AND Cliente_id = ?"
+            );
+            $stmt->execute([$cep, $logradouro, $numero, $complemento, $bairro, $cidade, $uf, $id_endereco, $id_cliente]);
+
+            $_SESSION['mensagem_sucesso'] = "Endereço atualizado com sucesso!";
             header("Location: gerir_enderecos.php");
             exit();
         } catch (PDOException $e) {
-            // echo $stmt->debugDumpParams();
-            $mensagem = '<div class="alert alert-danger">Erro ao adicionar o endereço. Tente novamente.</div>';
-            // Para depuração (em ambiente de desenvolvimento): error_log($e->getMessage());
+            $mensagem = '<div class="alert alert-danger">Erro ao atualizar o endereço. Tente novamente.</div>';
+            // Para depuração: error_log($e->getMessage());
         }
     }
 }
@@ -91,14 +124,14 @@ include '../includes/navbar_logged_in.php';
     <?php include '../includes/sidebar.php'; ?>
 
     <div class="container-fluid p-4">
-        <h1 class="mb-4">Adicionar Endereço</h1>
+        <h1 class="mb-4">Editar Endereço</h1>
         <hr>
 
         <?php if (!empty($mensagem)) { echo $mensagem; } ?>
 
         <div class="card shadow-sm">
             <div class="card-body">
-                <form action="adicionar_endereco.php" method="post">
+                <form action="editar_endereco.php?id=<?= htmlspecialchars($id_endereco) ?>" method="post">
                     <div class="mb-3">
                         <label for="cep" class="form-label">CEP:</label>
                         <input type="text" class="form-control" id="cep" name="cep" value="<?= htmlspecialchars($cep) ?>" required>
@@ -130,7 +163,7 @@ include '../includes/navbar_logged_in.php';
                             <input type="text" class="form-control" id="uf" name="uf" value="<?= htmlspecialchars($uf) ?>" required maxlength="2">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Salvar Endereço</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                     <a href="gerir_enderecos.php" class="btn btn-secondary">Cancelar</a>
                 </form>
             </div>
