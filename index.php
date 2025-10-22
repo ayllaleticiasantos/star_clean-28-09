@@ -52,9 +52,11 @@ include 'includes/navbar.php';
         </button>
     </div>
 </div>
+
+
 <div class="container text-center my-5 py-5">
-    <h1 class="display-3 fw-bold">Bem-vindo(a) à <strong>StarClean</strong></h1>
-    <p class="lead col-lg-8 mx-auto">A sua plataforma para agendar serviços de limpeza com qualidade e confiança.</p>
+    <h1 class="display-3 fw-bold">Conheça alguns dos nossos serviços disponíveis</h1>
+    <p class="lead col-lg-8 mx-auto">Na StarClean, oferecemos uma variedade de serviços de limpeza para atender às suas necessidades. Confira alguns deles:</p>
 </div>
 
 <?php include 'includes/footer.php'; ?>

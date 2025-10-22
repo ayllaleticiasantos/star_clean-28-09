@@ -50,14 +50,17 @@ include '../includes/navbar_logged_in.php';
                 <li class="nav-item"><a class="nav-link text-dark" href="<?= BASE_URL ?>/admin/dashboard.php"><i class="fas fa-chart-line fa-fw me-2"></i>Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link text-dark" href="<?= BASE_URL ?>/admin/gerir_utilizadores.php"><i class="fas fa-users fa-fw me-2"></i>Gerir Utilizadores</a></li>
                 <li class="nav-item"><a class="nav-link text-dark active" href="<?= BASE_URL ?>/admin/gerir_agendamentos.php"><i class="fas fa-calendar-check fa-fw me-2"></i>Gerir Agendamentos</a></li>
+                 <li class="nav-item">
+            <a class="nav-link text-dark" href="<?= BASE_URL ?>/admin/adicionar_servico.php"><i class="fas fa-briefcase fa-fw me-2"></i>Cadastrar Serviço</a>
+        </li>
             <?php endif; ?>
         </ul>
     </div>
 </div>
 <?
-include '../includes/menu.php';
+include '../includes/sidebar.php';
 ?>
-<div class="container-fluid">
+<!-- <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 bg-white p-3 d-none d-md-block" style="min-height: 100vh;">
             <ul class="nav flex-column mt-3">
@@ -65,9 +68,10 @@ include '../includes/menu.php';
                     <li class="nav-item"><a class="nav-link text-dark" href="<?= BASE_URL ?>/admin/dashboard.php"><i class="fas fa-chart-line fa-fw me-2"></i>Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="<?= BASE_URL ?>/admin/gerir_utilizadores.php"><i class="fas fa-users fa-fw me-2"></i>Gerir Utilizadores</a></li>
                     <li class="nav-item"><a class="nav-link text-dark active" href="<?= BASE_URL ?>/admin/gerir_agendamentos.php"><i class="fas fa-calendar-check fa-fw me-2"></i>Gerir Agendamentos</a></li>
+                    
                 <?php endif; ?>
             </ul>
-        </div>
+        </div> -->
 
         <div class="col-12 col-md-10 p-4">
             <h1 class="mb-4">Gestão de Agendamentos</h1>

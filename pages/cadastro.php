@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $descricao = trim($_POST['descricao']);
 
                     if (empty($nomeRazao) || empty($cpfCnpj) || empty($especialidade)) {
-                        $mensagem = '<div class="alert alert-danger">Nome/Razão Social, CPF/CNPJ e Especialidade são obrigatórios!</div>';
+                        $mensagem = '<div class="alert alert-danger">Nome, CPF e Especialidade são obrigatórios!</div>';
                         break;
                     }
 
@@ -151,10 +151,10 @@ include '../includes/navbar.php';
 
             <div id="camposPrestador" style="display: none;">
                 <div class="mb-3"><label for="prestador_nome_razao" class="form-label"
-                        placeholder="Dígite Seu Nome ou Razão Social">Nome / Razão Social:</label><input
+                        placeholder="Dígite Seu Nome ou Razão Social">Nome:</label><input
                         type="text" class="form-control" name="prestador_nome_razao" id="prestador_nome_razao" placeholder="Dígite Seu Nome ou Razão Social"></div>
                 <div class="mb-3"><label for="prestador_sobrenome_fantasia" class="form-label"
-                        placeholder="Digite Seu Sobrenome ou Nome Fantasia">Sobrenome / Nome Fantasia:</label><input
+                        placeholder="Digite Seu Sobrenome ou Nome Fantasia">Sobrenome:</label><input
                         type="text" class="form-control" name="prestador_sobrenome_fantasia"
                         id="prestador_sobrenome_fantasia" placeholder="Digite Seu Sobrenome ou Nome Fantasia"></div>
 
@@ -165,11 +165,11 @@ include '../includes/navbar.php';
                         value="cpf" checked>
                     <label class="form-check-label" for="tipoDocCpf">Pessoa Física (CPF)</label>
                 </div>
-                <div class="form-check form-check-inline">
+                <!-- <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="tipo_documento_prestador" id="tipoDocCnpj"
                         value="cnpj">
                     <label class="form-check-label" for="tipoDocCnpj">Pessoa Jurídica (CNPJ)</label>
-                </div>
+                </div> -->
             </div>
 
             <div class="mb-3">

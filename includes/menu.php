@@ -18,6 +18,9 @@ $tipo_usuario = $_SESSION['usuario_tipo'] ?? '';
         <li class="nav-item">
             <a class="nav-link text-dark" href="<?= BASE_URL ?>/admin/gerir_agendamentos.php"><i class="fas fa-calendar-check fa-fw me-2"></i>Gerir Agendamentos</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="<?= BASE_URL ?>/admin/adicionar_servico.php"><i class="fas fa-briefcase fa-fw me-2"></i>Cadastrar Serviço</a>
+        </li>
 
     <?php // Menu para Prestador ?>
     <?php elseif ($tipo_usuario === 'prestador'): ?>

@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] !== 'cliente') 
 
 $mensagem = '';
 $servico = null;
-$enderecos_cliente = []; // Renomeado para plural, pois pode ter vários
+$enderecos_cliente = []; 
 $id_cliente = $_SESSION['usuario_id'];
 
 // Valida o servico_id
@@ -54,12 +54,12 @@ if (!isset($_GET['servico_id']) || !is_numeric($_GET['servico_id'])) {
 }
 
 
-// --- LÓGICA DE PROCESSAMENTO DO AGENDAMENTO (POST) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $servico && !empty($enderecos_cliente)) {
     $prestador_id = $servico['prestador_id'];
-    $endereco_id = $_POST['endereco_id'] ?? null; // Novo campo
-    $data = $_POST['data'];
-    $hora = $_POST['hora'];
+    $endereco_id = $_POST['endereco_id'] ?? null; 
+    // CORREÇÃO 1: Usar os nomes 'data' e 'hora' do formulário HTML
+    $data = $_POST['data']; 
+    $hora = $_POST['hora']; 
     $observacoes = $_POST['observacoes'];
     $status = 'pendente';
     
@@ -68,8 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $servico && !empty($enderecos_clien
     } else {
         try {
             $pdo = obterConexaoPDO();
+            // CORREÇÃO 2: Nomes de colunas ajustados para corresponderem ao db_starclean.sql
             $stmt = $pdo->prepare(
-                "INSERT INTO Agendamento (Cliente_id, Prestador_id, Servico_id, Endereco_id, data_agendamento, hora_agendamento, status, observacoes)
+                "INSERT INTO Agendamento (cliente_id, prestador_id, servico_id, endereco_id, data_agendamento, hora_agendamento, status, observacoes)
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
             );
             $stmt->execute([$id_cliente, $prestador_id, $servico['id'], $endereco_id, $data, $hora, $status, $observacoes]);
@@ -79,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $servico && !empty($enderecos_clien
             exit();
         } catch (PDOException $e) {
             $mensagem = '<div class="alert alert-danger">Erro ao solicitar o agendamento. Verifique se a data e hora são válidas.</div>';
-            error_log($e->getMessage());
+            error_log("Erro no INSERT de Agendamento: " . $e->getMessage());
         }
     }
 }
@@ -132,7 +133,7 @@ include '../includes/navbar_logged_in.php';
                         </div>
                         <div class="mb-3">
                             <label for="hora" class="form-label">Hora do Serviço:</label>
-                            <input type="time" class="form-control" id="hora" name="hora" required>
+                             <input type="time" class="form-control" id="hora" name="hora" required>
                         </div>
                         <div class="mb-3">
                             <label for="observacoes" class="form-label">Observações (opcional):</label>
